@@ -20,18 +20,13 @@ export class AssetComponent implements OnInit {
 
     assetTypes: any[] = [];
 
-
     assetDialog: boolean = false;
 
     deleteProductDialog: boolean = false;
 
     deleteProductsDialog: boolean = false;
 
-    products: Product[] = [];
-
-    product: Product = {};
-
-    selectedProducts: Asset[] = [];
+    selectedAssets: Asset[] = [];
 
     submitted: boolean = false;
 
@@ -48,7 +43,6 @@ export class AssetComponent implements OnInit {
         this.globalDataService.setPageName("Assets");
         this.loadAssetTypes();
         this.loadAssets();
-        this.productService.getProducts().then(data => this.products = data);
 
         this.cols = [
             { field: 'name', header: 'Name' },
@@ -59,8 +53,7 @@ export class AssetComponent implements OnInit {
 
         this.statuses = [
             { label: 'ACTIVE', value: 'active' },
-            { label: 'INACTIVE', value: 'inactive' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
+            { label: 'INACTIVE', value: 'inactive' }
         ];
     }
 
@@ -82,7 +75,7 @@ export class AssetComponent implements OnInit {
     }
 
     openNew() {
-        this.product = {};
+        this.asset = {};
         this.submitted = false;
         this.assetDialog = true;
     }
@@ -103,22 +96,28 @@ export class AssetComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        //this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        this.assetService.deleteAssets(this.selectedProducts);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
-        this.selectedProducts = [];
-        this.assets = [];
-        this.loadAssets();
+        this.assetService.deleteAssets(this.selectedAssets).subscribe((data: any) => {
+            this.loadAssets();
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
+            this.selectedAssets = [];
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        //this.products = this.products.filter(val => val.id !== this.product.id);
-        this.assetService.deleteAsset(this.asset.id);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
-        this.asset = {};
-        this.assets = [];
-        this.loadAssets();
+        this.assetService.deleteAsset(this.asset.id).subscribe((data: any) => {
+            this.loadAssets();
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
+            this.asset = {};
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
+
+
     }
 
     hideDialog() {
@@ -131,49 +130,26 @@ export class AssetComponent implements OnInit {
 
         if (this.asset.name?.trim()) {
             if (this.asset.id) {
-                // @ts-ignore
-                // this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-                // this.products[this.findIndexById(this.product.id)] = this.product;
-                this.assetService.updateAsset(this.asset);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                this.assetService.updateAsset(this.asset).subscribe((data: any) => {
+                    this.loadAssets();
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                });
             } else {
-                // this.product.id = this.createId();
-                // this.product.code = this.createId();
-                // this.product.image = 'product-placeholder.svg';
-                // // @ts-ignore
-                // this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-                // this.products.push(this.product);
-                this.assetService.addAsset(this.asset);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
+                this.assetService.addAsset(this.asset).subscribe((data: any) => {
+                    this.loadAssets();
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
+                },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                });
             }
-            this.assets = [];
-            this.loadAssets();
-            //this.assets = [...this.assets];
             this.assetDialog = false;
-            this.product = {};
+            this.asset = {};
         }
     }
-
-    // findIndexById(id: string): number {
-    //     let index = -1;
-    //     for (let i = 0; i < this.products.length; i++) {
-    //         if (this.products[i].id === id) {
-    //             index = i;
-    //             break;
-    //         }
-    //     }
-
-    //     return index;
-    // }
-
-    // createId(): string {
-    //     let id = '';
-    //     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //     for (let i = 0; i < 5; i++) {
-    //         id += chars.charAt(Math.floor(Math.random() * chars.length));
-    //     }
-    //     return id;
-    // }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');

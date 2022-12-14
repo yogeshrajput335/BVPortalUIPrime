@@ -14,32 +14,16 @@ export class AssetService {
     getAllAssetTypes() {
       return this.httpClient.get('AssetType/GetAssetType');
     }
-    addAsset(asset: Asset): void {
-      this.httpClient.post('Asset/InsertAsset', asset).subscribe((data: any) => {
-      },
-        (error: HttpErrorResponse) => {
-          console.log(error.name + ' ' + error.message);
-        });
+    addAsset(asset: Asset) {
+      return this.httpClient.post('Asset/InsertAsset', asset);
     }
-    updateAsset(asset: Asset): void {
-      this.httpClient.put('Asset/UpdateAsset', asset).subscribe((data: any) => {
-      },
-        (error: HttpErrorResponse) => {
-          console.log(error.name + ' ' + error.message);
-        });
+    updateAsset(asset: Asset) {
+      return this.httpClient.put('Asset/UpdateAsset', asset);
     }
-    deleteAsset(id?: number): void {
-      this.httpClient.delete('Asset/DeleteAsset/' + id).subscribe((data: any) => {
-      },
-        (error: HttpErrorResponse) => {
-          console.log(error.name + ' ' + error.message);
-        });
+    deleteAsset(id?: number) {
+      return this.httpClient.delete('Asset/DeleteAsset/' + id);
     }
-    deleteAssets(assets: Asset[]): void {
-      this.httpClient.post('Asset/DeleteAssets',assets).subscribe((data: any) => {
-      },
-        (error: HttpErrorResponse) => {
-          console.log(error.name + ' ' + error.message);
-        });
+    deleteAssets(assets: Asset[]) {
+      return this.httpClient.post('Asset/DeleteAssets',assets);
     }
 }

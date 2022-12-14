@@ -118,13 +118,13 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Asset',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                icon: 'pi pi-fw pi-briefcase',
+                                routerLink: ['/features/asset']
                             },
                             {
                                 label: 'Asset Allocation',
                                 icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/asset-type']
                             }
                         ]
                     },

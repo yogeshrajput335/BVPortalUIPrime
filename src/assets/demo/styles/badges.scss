@@ -24,6 +24,16 @@
         background: #FEEDAF;
         color: #8A5340;
     }
+
+    &.status-active {
+        background: #C8E6C9;
+        color: #256029;
+    }
+
+    &.status-inactive {
+        background: #FFCDD2;
+        color: #C63737;
+    }
 }
 
 .customer-badge {

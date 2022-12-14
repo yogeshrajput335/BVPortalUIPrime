@@ -28,9 +28,9 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <!-- <th style="width: 3rem">
+                        <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th> -->
+                        </th>
                         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
                         <th pSortableColumn="type">Type <p-sortIcon field="type"></p-sortIcon></th>
                         <th pSortableColumn="modelNumber">Model Number <p-sortIcon field="modelNumber"></p-sortIcon></th>
@@ -40,6 +40,9 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-asset>
                     <tr>
+                        <td>
+                            <p-tableCheckbox [value]="asset"></p-tableCheckbox>
+                        </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Name</span>
                             {{asset.name}}
@@ -57,8 +60,8 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(asset)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(asset)"></button>
                             </div>
                         </td>
                     </tr>
@@ -68,7 +71,6 @@
 
         <p-dialog [(visible)]="assetDialog" [style]="{width: '450px'}" header="Asset Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <!-- <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image"> -->
                 <div class="field">
                     <label for="name">Name</label>
                     <input type="text" pInputText id="name" [(ngModel)]="asset.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !asset.name}"/>
@@ -76,7 +78,7 @@
                 </div>
                 <div class="field">
                     <label for="name">Type</label>
-                    <input type="text" pInputText id="type" [(ngModel)]="asset.typeId" autofocus />
+                    <p-dropdown [options]="assetTypes" [(ngModel)]="asset.typeId" optionLabel="name" optionValue="id"></p-dropdown>
                 </div>
                 <div class="field">
                     <label for="name">Model Number</label>
@@ -85,14 +87,7 @@
 
                 <div class="field">
                     <label for="status">Status</label>
-                    <p-dropdown id="status" [options]="statuses" optionLabel="label" optionValue="value" [(ngModel)]="asset.status" placeholder="Select a Status">
-                        <ng-template pTemplate="selectedItem">
-                            <span *ngIf="asset && asset.status" [class]="'product-badge status-' + asset.status.value.toLowerCase()">{{asset.status.value}}</span>
-                        </ng-template>
-                        <ng-template let-status pTemplate="status">
-                            <span [class]="'product-badge status-' + status.value.toLowerCase()">{{status.label}}</span>
-                        </ng-template>
-                    </p-dropdown>
+                    <p-dropdown [options]="statuses" [(ngModel)]="asset.status" optionLabel="label" optionValue="value"></p-dropdown>
                 </div>
             </ng-template>
 
@@ -105,7 +100,7 @@
         <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="product">Are you sure you want to delete <b>{{product.name}}</b>?</span>
+                <span *ngIf="asset">Are you sure you want to delete <b>{{asset.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductDialog = false"></button>
@@ -116,7 +111,7 @@
         <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
+                <span>Are you sure you want to delete selected assets?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductsDialog = false"></button>

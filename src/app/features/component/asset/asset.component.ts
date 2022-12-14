@@ -1,3 +1,4 @@
+import { GlobalDataService } from './../../../core/services/global-data.service';
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
@@ -17,6 +18,8 @@ export class AssetComponent implements OnInit {
 
     asset: Asset = {};
 
+    assetTypes: any[] = [];
+
 
     assetDialog: boolean = false;
 
@@ -28,7 +31,7 @@ export class AssetComponent implements OnInit {
 
     product: Product = {};
 
-    selectedProducts: Product[] = [];
+    selectedProducts: Asset[] = [];
 
     submitted: boolean = false;
 
@@ -38,9 +41,12 @@ export class AssetComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private productService: ProductService, private messageService: MessageService,private assetService: AssetService) { }
+    constructor(private productService: ProductService, private messageService: MessageService,
+        private assetService: AssetService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {
+        this.globalDataService.setPageName("Assets");
+        this.loadAssetTypes();
         this.loadAssets();
         this.productService.getProducts().then(data => this.products = data);
 
@@ -66,6 +72,14 @@ export class AssetComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
+    loadAssetTypes(){
+        this.assetService.getAllAssetTypes().subscribe((data: any) => {
+            this.assetTypes = data;
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
+    }
 
     openNew() {
         this.product = {};
@@ -77,28 +91,34 @@ export class AssetComponent implements OnInit {
         this.deleteProductsDialog = true;
     }
 
-    editProduct(product: Product) {
-        this.product = { ...product };
+    editProduct(asset: Asset) {
+        this.asset = { ...asset };
         this.assetDialog = true;
     }
 
-    deleteProduct(product: Product) {
+    deleteProduct(asset: Asset) {
         this.deleteProductDialog = true;
-        this.product = { ...product };
+        this.asset = { ...asset };
     }
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        //this.products = this.products.filter(val => !this.selectedProducts.includes(val));
+        this.assetService.deleteAssets(this.selectedProducts);
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
         this.selectedProducts = [];
+        this.assets = [];
+        this.loadAssets();
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.products = this.products.filter(val => val.id !== this.product.id);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-        this.product = {};
+        //this.products = this.products.filter(val => val.id !== this.product.id);
+        this.assetService.deleteAsset(this.asset.id);
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
+        this.asset = {};
+        this.assets = [];
+        this.loadAssets();
     }
 
     hideDialog() {
@@ -114,6 +134,7 @@ export class AssetComponent implements OnInit {
                 // @ts-ignore
                 // this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
                 // this.products[this.findIndexById(this.product.id)] = this.product;
+                this.assetService.updateAsset(this.asset);
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             } else {
                 // this.product.id = this.createId();
@@ -125,6 +146,7 @@ export class AssetComponent implements OnInit {
                 this.assetService.addAsset(this.asset);
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
             }
+            this.assets = [];
             this.loadAssets();
             //this.assets = [...this.assets];
             this.assetDialog = false;
@@ -132,26 +154,26 @@ export class AssetComponent implements OnInit {
         }
     }
 
-    findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].id === id) {
-                index = i;
-                break;
-            }
-        }
+    // findIndexById(id: string): number {
+    //     let index = -1;
+    //     for (let i = 0; i < this.products.length; i++) {
+    //         if (this.products[i].id === id) {
+    //             index = i;
+    //             break;
+    //         }
+    //     }
 
-        return index;
-    }
+    //     return index;
+    // }
 
-    createId(): string {
-        let id = '';
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
+    // createId(): string {
+    //     let id = '';
+    //     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    //     for (let i = 0; i < 5; i++) {
+    //         id += chars.charAt(Math.floor(Math.random() * chars.length));
+    //     }
+    //     return id;
+    // }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');

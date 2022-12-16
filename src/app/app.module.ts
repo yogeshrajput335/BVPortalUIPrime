@@ -12,6 +12,12 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { AssetService } from './features/service/asset.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+    return localStorage.getItem("token");
+}
 
 @NgModule({
     declarations: [
@@ -19,7 +25,16 @@ import { AssetService } from './features/service/asset.service';
     ],
     imports: [
         AppRoutingModule,
-        AppLayoutModule
+        AppLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        JwtModule.forRoot({
+          config: {
+            tokenGetter: tokenGetter,
+            allowedDomains: ["localhost:7037"],
+            disallowedRoutes: []
+          }
+        })
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

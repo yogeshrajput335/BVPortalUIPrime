@@ -12,6 +12,8 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { AssetService } from './features/service/asset.service';
+import { AssetTypeService } from './features/service/asset-type.service';
+import { UserService } from './features/service/user.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 
@@ -39,7 +41,7 @@ export function tokenGetter() {
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, AssetService
+        PhotoService, ProductService, AssetService,AssetTypeService,UserService,
     ],
     bootstrap: [AppComponent]
 })

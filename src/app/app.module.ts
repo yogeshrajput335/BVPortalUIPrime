@@ -13,6 +13,7 @@ import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { AssetService } from './features/service/asset.service';
 import { AssetTypeService } from './features/service/asset-type.service';
+import { UserService } from './features/service/user.service';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,7 @@ import { AssetTypeService } from './features/service/asset-type.service';
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, AssetService,AssetTypeService,
+        PhotoService, ProductService, AssetService,AssetTypeService,UserService,
     ],
     bootstrap: [AppComponent]
 })

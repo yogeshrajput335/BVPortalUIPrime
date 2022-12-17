@@ -11,9 +11,9 @@ export class UserService {
     getAllUser() {
       return this.httpClient.get('User/GetUsers');
   }
-    getAllUserTypes() {
-      return this.httpClient.get('Employee/GetEmployee');
-    }
+    // getAllUserTypes() {
+    //   return this.httpClient.get('Employee/GetEmployee');
+    // }
     addUser(user: User) {
       return this.httpClient.post('User/InsertUser', user);
     }

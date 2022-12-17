@@ -42,7 +42,7 @@ export class UserComponent implements OnInit {
     ngOnInit() {
         this.globalDataService.setPageName("Users");
         this.loadUsers();
-        this.loadUserTypes();
+      
 
         this.cols = [
             { field: 'username', header: 'UserName' },
@@ -56,6 +56,11 @@ export class UserComponent implements OnInit {
             { label: 'ACTIVE', value: 'active' },
             { label: 'INACTIVE', value: 'inactive' }
         ];
+
+        this.userTypes = [
+            { label: 'Admin', value: 'ADMIN' },
+            { label: 'Employee', value: 'EMPLOYEE' }
+        ];
     }
 
     loadUsers(){
@@ -66,14 +71,14 @@ export class UserComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
-    loadUserTypes(){
-        this.userService.getAllUserTypes().subscribe((data: any) => {
-            this.userTypes = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+    // loadUserTypes(){
+    //     this.userService.getAllUserTypes().subscribe((data: any) => {
+    //         this.userTypes = data;
+    //     },
+    //     (error: HttpErrorResponse) => {
+    //         console.log(error.name + ' ' + error.message);
+    //     });
+    // }
 
     openNew() {
         this.user = {};

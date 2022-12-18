@@ -1,0 +1,127 @@
+<button pButton pRipple label="Invoice List" icon="pi pi-file" class="p-button-success mr-2" (click)="openInvoiceList()"></button>
+<div class="book">
+    <div class="page">
+        <div class="subpage">
+            <div style="width:100%;display:flex" id="billFrom">
+                <div style="width:30%">
+                    <span style="color:blue;font-size:16px;font-weight:700">INVOICE</span><br/>
+                    <span>Company Name</span><br/>
+                    <span>Address Line 1</span><br/>
+                    <span>Address Line 2</span><br/>
+                    <span>Address Line 3</span><br/>
+                    <a>Edit Company</a>
+                </div>
+                <div style="width:30%">
+                    <span></span><br/>
+                    <span>Email Address</span><br/>
+                    <span>Phone Number</span><br/>
+                </div>
+                <div style="width:40%;text-align: right;padding-right: 50px;">
+                    <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
+                </div>
+            </div>
+            <br/>
+            <div style="width:100%;background-color: #ddfff4;" id="billTo">
+                <div style="width:100%;padding:10px">
+                    <select><option>Customer 1</option></select>
+                </div>
+                <div style="width:100%;display:flex;padding:10px">
+                    <div style="width:30%">
+                        <span>Bill To</span><br/>
+                        <span>Customer Name</span><br/>
+                        <span>Address Line 1</span><br/>
+                        <span>Address Line 2</span><br/>
+                        <span>Address Line 3</span><br/>
+                        <a>Edit Customer</a>
+                    </div>
+                    <div style="width:30%">
+                        <table>
+                            <tr>
+                                <td>Invoice No.</td>
+                                <td><input type="text" style="width:80px"/></td>
+                            </tr>
+                            <tr>
+                                <td>Terms</td>
+                                <td><select style="width:80px"><option>Net 30</option></select></td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Date</td>
+                                <td><input type="text" style="width:80px"/></td>
+                            </tr>
+                            <tr>
+                                <td>Due Date</td>
+                                <td><input type="text" style="width:80px"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div style="width:100%" id="tags">
+                <div style="width:100%;display: flex;">
+                    <span style="width:50%">Tags (hidden)</span>
+                    <span style="width:50%;text-align: right;"><a>Manage Tags</a></span>
+                </div>
+                <input type="text" style="width:100%"/>
+            </div>
+            <br/>
+            <div style="width:100%" id="productService">
+                <div style="width:100%;display: flex;">
+                    <span style="width:80%">Product or service</span>
+                    <span style="width:30%;">Amount</span>
+                </div>
+                <hr/>
+                <div style="width:100%;">
+                    <div style="width:100%;display: flex;">
+                        <div style="width:5%">1.</div>
+                        <div style="width:25%"><input type="text" style="width:100%;border: none;" placeholder="Product or service"/></div>
+                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
+                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
+                        <div style="width:5%">x</div>
+                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
+                        <div style="width:5%">=</div>
+                        <div style="width:30%"><input type="text" style="width:100%;border: none;" placeholder="$0.00"/></div>
+                    </div>
+                    <br/>
+                    <div style="width:100%;display: flex;">
+                        <input type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                        <a><i class="pi pi-trash"></i></a>
+                    </div>
+                </div>
+                <hr/>
+                <div style="width:100%;">
+                    <div style="width:100%;display: flex;">
+                        <div style="width:5%">2.</div>
+                        <div style="width:25%"><span>Product or service</span></div>
+                        <div  style="width:10%"><span>Unit</span></div>
+                        <div  style="width:10%"><span>Qty</span></div>
+                        <div style="width:5%">x</div>
+                        <div  style="width:10%"><span>Rate</span></div>
+                        <div style="width:5%">=</div>
+                        <div style="width:30%"><span>$0.00</span></div>
+                    </div>
+                    <br/>
+                    <div style="width:100%;display: flex;">
+                        <input type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                        <a><i class="pi pi-trash"></i></a>
+                    </div>
+                </div>
+                <hr/>
+                <a><i class="pi pi-plus-circle"></i> Add product or service</a>
+                <hr/>
+            </div>
+            <br/>
+            <div style="width:100%" id="totalAndPayment">
+
+            </div>
+            <br/>
+            <div style="width:100%" id="notes">
+
+            </div>
+            <br/>
+            <div style="width:100%" id="attachments">
+
+            </div>
+        </div>
+    </div>
+</div>

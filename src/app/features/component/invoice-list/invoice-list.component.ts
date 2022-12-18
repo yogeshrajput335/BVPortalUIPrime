@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { InvoiceList } from './invoice-list';
 import { AssetTypeService } from '../../service/asset-type.service';
 import { InvoiceService } from '../../service/invoice-list.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './invoice-list.component.html',
@@ -38,7 +39,7 @@ export class InvoiceListComponent implements OnInit {
 
 
     constructor(private productService: ProductService, private messageService: MessageService,
-        private invoiceService: InvoiceService, private globalDataService: GlobalDataService) { }
+        private invoiceService: InvoiceService, private globalDataService: GlobalDataService, private router: Router) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Invoices");
@@ -74,9 +75,10 @@ export class InvoiceListComponent implements OnInit {
     }
 
     openNew() {
-        this.invoice = {};
-        this.submitted = false;
-        this.assettypeDialog = true;
+        this.router.navigateByUrl('/features/invoice-create');
+        // this.invoice = {};
+        // this.submitted = false;
+        // this.assettypeDialog = true;
     }
 
     deleteSelectedProducts() {

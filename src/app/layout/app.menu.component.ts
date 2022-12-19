@@ -35,22 +35,22 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Employee',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                icon: 'pi pi-fw pi-users',
+                                routerLink: ['/features/employee']
                             },
                             {
                                 label: 'Jobs',
-                                icon: 'pi pi-fw pi-lock',
+                                icon: 'pi pi-fw pi-briefcase',
                                 routerLink: ['/auth/access']
                             },
                             {
                                 label: 'Reference',
-                                icon: 'pi pi-fw pi-lock',
+                                icon: 'pi pi-fw pi-bookmark',
                                 routerLink: ['/auth/access']
                             },
                             {
                                 label: 'Candidate',
-                                icon: 'pi pi-fw pi-lock',
+                                icon: 'pi pi-fw pi-user-plus',
                                 routerLink: ['/auth/access']
                             }
                         ]
@@ -61,7 +61,7 @@ export class AppMenuComponent implements OnInit {
                         items: [
                             {
                                 label: 'Client',
-                                icon: 'pi pi-fw pi-sign-in',
+                                icon: 'pi pi-fw pi-user',
                                 routerLink: ['/auth/login']
                             },
                             {
@@ -71,7 +71,7 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Project Assignment',
-                                icon: 'pi pi-fw pi-lock',
+                                icon: 'pi pi-fw pi-verified',
                                 routerLink: ['/auth/access']
                             },
                             {
@@ -87,7 +87,7 @@ export class AppMenuComponent implements OnInit {
                         items: [
                             {
                                 label: 'Holiday',
-                                icon: 'pi pi-fw pi-sign-in',
+                                icon: 'pi pi-fw pi-image',
                                 routerLink: ['/auth/login']
                             },
                             {
@@ -97,7 +97,7 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Leave',
-                                icon: 'pi pi-fw pi-lock',
+                                icon: 'pi pi-fw pi-home',
                                 routerLink: ['/auth/access']
                             },
                             {

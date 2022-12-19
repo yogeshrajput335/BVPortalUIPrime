@@ -76,8 +76,8 @@ export class AppMenuComponent implements OnInit {
                             },
                             {
                                 label: 'Invoice',
-                                icon: 'pi pi-fw pi-calculator',
-                                routerLink: ['/auth/access']
+                                icon: 'pi pi-fw pi-file-edit',
+                                routerLink: ['/features/invoice-list']
                             }
                         ]
                     },

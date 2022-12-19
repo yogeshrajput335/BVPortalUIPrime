@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
         { path: 'asset', loadChildren: () => import('./asset/asset.module').then(m => m.AssetModule) },
         { path: 'asset-type', loadChildren: () => import('./asset-type/asset-type.module').then(m => m.AssetTypeModule) },
         { path: 'user', loadChildren: () => import('./users/user.module').then(m => m.UserModule) },
+        { path: 'employee', loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule) },
         // { path: 'empty', loadChildren: () => import('./empty/emptydemo.module').then(m => m.EmptyDemoModule) },
         // { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: '**', redirectTo: '/notfound' }

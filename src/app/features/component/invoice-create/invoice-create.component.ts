@@ -16,6 +16,13 @@ export class InvoiceCreateComponent implements OnInit {
 
     items: MenuItem[] = [];
 
+    customers: any[] = [];
+    selectedCustomer:any;
+    displayCustomerPanel = false;
+
+    displayCompanyPanel = false;
+    displayTagPanel = false;
+
     constructor(private messageService: MessageService,private router: Router,
         private invoiceService: InvoiceService, private globalDataService: GlobalDataService) { }
 
@@ -39,17 +46,10 @@ export class InvoiceCreateComponent implements OnInit {
                 command: () => {
                     this.router.navigateByUrl('/features/invoice-list');
                 }
-            },
-            {
-                icon: 'pi pi-upload',
-                routerLink: ['/fileupload']
-            },
-            {
-                icon: 'pi pi-external-link',
-                url: 'http://angular.io'
-
             }
+
         ];
+        this.customers = [{id:1,name:'Customer 1'},{id:2,name:'Customer 2'}]
     }
 
 

@@ -11,5 +11,4 @@ export interface User {
     status?: string;
     employeeId?: number;
     employee?: string;
-    userTypeId?:number;
   }

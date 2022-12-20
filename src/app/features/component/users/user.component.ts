@@ -35,14 +35,17 @@ export class UserComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
+    employees = []
+
 
     constructor(private productService: ProductService, private messageService: MessageService,
         private userService: UserService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Users");
+        this.loadEmployees();
         this.loadUsers();
-      
+
 
         this.cols = [
             { field: 'username', header: 'UserName' },
@@ -71,14 +74,14 @@ export class UserComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
-    // loadUserTypes(){
-    //     this.userService.getAllUserTypes().subscribe((data: any) => {
-    //         this.userTypes = data;
-    //     },
-    //     (error: HttpErrorResponse) => {
-    //         console.log(error.name + ' ' + error.message);
-    //     });
-    // }
+    loadEmployees(){
+        this.userService.getAllEmployeeForDropdown().subscribe((data: any) => {
+            this.employees = data;
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
+    }
 
     openNew() {
         this.user = {};

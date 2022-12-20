@@ -31,9 +31,9 @@
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
+                        <th pSortableColumn="employee">Employee<p-sortIcon field="employee"></p-sortIcon></th>
                         <th pSortableColumn="username">User Name<p-sortIcon field="username"></p-sortIcon></th>
                         <th pSortableColumn="usertype">User Type<p-sortIcon field="usertype"></p-sortIcon></th>
-                        <th pSortableColumn="password">Password<p-sortIcon field="password"></p-sortIcon></th>
                         <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
                         <th></th>
@@ -45,16 +45,16 @@
                             <p-tableCheckbox [value]="user"></p-tableCheckbox>
                         </td>
                         <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Employee</span>
+                            {{user.employee}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">User Name</span>
                             {{user.username}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">User Type</span>
                             {{user.userType}}
-                        </td>
-                        <td style="width:20%; min-width:10rem;">
-                            <span class="p-column-title">Password</span>
-                            {{user.password}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Email</span>
@@ -77,17 +77,22 @@
         <p-dialog [(visible)]="userDialog" [style]="{width: '450px'}" header="User Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
+                    <label for="status">Employee</label>
+                    <span *ngIf="user.id!==0">{{user.employee}}</span>
+                    <p-dropdown *ngIf="user.id===0" [options]="employees" [(ngModel)]="user.employeeId" optionLabel="fullName" optionValue="id"></p-dropdown>
+                </div>
+                <div class="field">
                     <label for="username">User Name</label>
                     <input type="text" pInputText id="username" [(ngModel)]="user.username" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.username}"/>
                     <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.username">User Name is required.</small>
                 </div>
                 <div class="field">
                     <label for="name">User Type</label>
-                    <p-dropdown [options]="userTypes" [(ngModel)]="user.userTypeId" optionLabel="label" optionValue="value"></p-dropdown>
+                    <p-dropdown [options]="userTypes" [(ngModel)]="user.userType" optionLabel="label" optionValue="value"></p-dropdown>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input type="text" pInputText id="password" [(ngModel)]="user.password" autofocus />
+                    <p-password [(ngModel)]="user.password" [toggleMask]="true"></p-password>
                 </div>
                 <div class="field">
                     <label for="email">Email</label>

@@ -6,16 +6,16 @@
                 <div class="companyDetails">
                     <span class="invoiceHeader">INVOICE</span><br/>
                     <br/>
-                    <span>Company Name</span><br/>
-                    <span>Address Line 1</span><br/>
-                    <span>Address Line 2</span><br/>
-                    <span>Address Line 3</span><br/>
+                    <span>{{selectedCompany?.companyName??''}}</span><br/>
+                    <span>{{selectedCompany?.addressLine1??''}}</span><br/>
+                    <span>{{selectedCompany?.addressLine2??''}}</span><br/>
+                    <span>{{selectedCompany?.addressLine3??''}}</span><br/>
                     <a (click)="displayCompanyPanel = true">Edit Company</a>
                 </div>
                 <div class="companyContactDetails">
                     <span></span><br/><br/><br/>
-                    <span>Email Address</span><br/>
-                    <span>Phone Number</span><br/>
+                    <span>{{selectedCompany?.emailAddress??''}}</span><br/>
+                    <span>{{selectedCompany?.phoneNumber??''}}</span><br/>
                 </div>
                 <div class="companyLogoDetails">
                     <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
@@ -24,34 +24,39 @@
             <br/>
             <div style="width:100%;background-color: #edf3fb;padding: 10px 30px 10px 30px;" id="billTo">
                 <div style="width:100%;padding:10px">
-                    <p-dropdown [options]="customers" [(ngModel)]="selectedCustomer" optionLabel="name" optionValue="id"></p-dropdown>
+                    <p-dropdown [options]="masterData.customer" [(ngModel)]="selectedCustomer" optionLabel="customerName"></p-dropdown>
                 </div>
                 <div style="width:100%;display:flex;padding:10px">
                     <div style="width:30%">
-                        <span>Bill To</span><br/>
-                        <span>Customer Name</span><br/>
-                        <span>Address Line 1</span><br/>
-                        <span>Address Line 2</span><br/>
-                        <span>Address Line 3</span><br/>
-                        <a (click)="displayCustomerPanel = true">Edit Customer</a>
+                        <strong>Bill To</strong><br/>
+                        <span>{{selectedCustomer?.customerName??''}}</span><br/>
+                        <span>{{selectedCustomer?.addressLine1??''}}</span><br/>
+                        <span>{{selectedCustomer?.addressLine2??''}}</span><br/>
+                        <span>{{selectedCustomer?.addressLine3??''}}</span><br/>
+                        <a (click)="displayCustomerPanel = true" >Edit Customer</a>
                     </div>
                     <div style="width:30%">
                         <table>
                             <tr>
                                 <td>Invoice No.</td>
-                                <td><input type="text" style="width:80px"/></td>
+                                <td><input type="text" style="width:80px" [(ngModel)]="invoice.invoiceNumber"/></td>
                             </tr>
                             <tr>
                                 <td>Terms</td>
-                                <td><select style="width:80px"><option>Net 30</option></select></td>
+                                <td><select style="width:80px" [(ngModel)]="invoice.term">
+                                    <option value="15">Net 15</option>
+                                    <option value="30">Net 30</option>
+                                    <option value="45">Net 45</option>
+                                    <option value="60">Net 60</option>
+                                </select></td>
                             </tr>
                             <tr>
                                 <td>Invoice Date</td>
-                                <td><input type="text" style="width:80px"/></td>
+                                <td><input type="text" style="width:80px"  [(ngModel)]="invoice.invoiceDate"/></td>
                             </tr>
                             <tr>
                                 <td>Due Date</td>
-                                <td><input type="text" style="width:80px"/></td>
+                                <td><input type="text" style="width:80px"  [(ngModel)]="invoice.dueDate"/></td>
                             </tr>
                         </table>
                     </div>
@@ -75,7 +80,13 @@
                 <div style="width:100%;">
                     <div style="width:100%;display: flex;">
                         <div style="width:5%">1.</div>
-                        <div style="width:25%"><input type="text" style="width:100%;border: none;" placeholder="Product or service"/></div>
+                        <div style="width:25%">
+                            <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
+                            <select>
+                                <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
+                            </select>
+
+                        </div>
                         <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
                         <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
                         <div style="width:5%">x</div>

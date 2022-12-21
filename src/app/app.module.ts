@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { InvoiceService } from './features/service/invoice-list.service';
 import { CandidateService } from './features/service/candidate.service ';
+import { CommonService } from './features/service/common.service';
 
 export function tokenGetter() {
     return localStorage.getItem("token");
@@ -45,7 +46,7 @@ export function tokenGetter() {
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService, AssetService,AssetTypeService,UserService,
-        InvoiceService ,EmployeeService,CandidateService,
+        InvoiceService ,EmployeeService,CandidateService,CommonService
     ],
     bootstrap: [AppComponent]
 })

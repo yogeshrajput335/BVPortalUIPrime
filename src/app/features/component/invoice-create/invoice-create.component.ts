@@ -4,6 +4,8 @@ import { MessageService, MenuItem } from 'primeng/api';
 import { InvoiceService } from '../../service/invoice-list.service';
 import { Invoice } from './invoice-create';
 import { Router } from '@angular/router';
+import { CommonService } from '../../service/common.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     templateUrl: './invoice-create.component.html',
@@ -17,17 +19,23 @@ export class InvoiceCreateComponent implements OnInit {
     items: MenuItem[] = [];
 
     customers: any[] = [];
-    selectedCustomer:any;
+    //selectedCustomer:any;
     displayCustomerPanel = false;
 
     displayCompanyPanel = false;
     displayTagPanel = false;
+    masterData:any
+
+    selectedCompany:any = null;
+    selectedCustomer:any = null;
+    productServices:any[] = []
 
     constructor(private messageService: MessageService,private router: Router,
-        private invoiceService: InvoiceService, private globalDataService: GlobalDataService) { }
+        private commonService: CommonService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Create Invoice");
+        this.loadMasterDetails();
         this.items = [
             {
                 icon: 'pi pi-save',
@@ -50,6 +58,23 @@ export class InvoiceCreateComponent implements OnInit {
 
         ];
         this.customers = [{id:1,name:'Customer 1'},{id:2,name:'Customer 2'}]
+    }
+    loadMasterDetails(){
+        let masters = ['Customer','Company','Product','Service','PaymentOption']
+        this.commonService.GetMasterDetails(masters).subscribe((data: any) => {
+            this.masterData = data;
+            this.selectedCompany = this.masterData.company[0];
+            this.masterData.product.forEach((element : any) => {
+                this.productServices.push({id:'product'+element.id,name:element.productName,isProduct:true})
+            });
+            this.masterData.service.forEach((element : any) => {
+                this.productServices.push({id:'service'+element.id,name:element.serviceName,isProduct:false})
+            });
+            console.log(this.productServices)
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
     }
 
 

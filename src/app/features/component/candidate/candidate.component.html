@@ -1,0 +1,224 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                            (click)="deleteSelectedCandidates()"
+                            [disabled]="!selectedCandidates || !selectedCandidates.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
+                        chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"
+                        (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="candidates" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                [globalFilterFields]="['createdDate','name', 'technology', 'visa', 'rate','client','clientContact','clientMail','vendor','vendorContact','vendorMail','status']"
+                [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedCandidates" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage Candidates</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="createdDate">Created Date<p-sortIcon field="createdDate"></p-sortIcon></th>
+                        <th pSortableColumn="name">Name<p-sortIcon field="name"></p-sortIcon></th>
+                        <th pSortableColumn="technology">Technology<p-sortIcon field="technology"></p-sortIcon></th>
+                        <th pSortableColumn="visa">Visa<p-sortIcon field="visa"></p-sortIcon></th>
+                        <th pSortableColumn="rate">Rate<p-sortIcon field="rate"></p-sortIcon></th>
+                        <th pSortableColumn="client">Client<p-sortIcon field="client"></p-sortIcon></th>
+                        <th pSortableColumn="clientContact">Client Contact<p-sortIcon
+                                field="clientContact"></p-sortIcon></th>
+                        <th pSortableColumn="clientMail">Client Mail<p-sortIcon field="client Mail"></p-sortIcon></th>
+                        <th pSortableColumn="vendor">Vendor<p-sortIcon field="vendor"></p-sortIcon></th>
+                        <th pSortableColumn="vendorContact">Vendor Contact<p-sortIcon
+                                field="vendorContact"></p-sortIcon></th>
+                        <th pSortableColumn="vendorMail">Vendor Mail<p-sortIcon field="vendorMail"></p-sortIcon></th>
+                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-candidate>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="candidate"></p-tableCheckbox>
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Created Date</span>
+                            {{candidate.createdDate|date:'longDate'}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Name</span>
+                            {{candidate.name}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Technology</span>
+                            {{candidate.technology}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Visa</span>
+                            {{candidate.visa}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Rate</span>
+                            {{candidate.rate}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Client</span>
+                            {{candidate.client}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Client Contact</span>
+                            {{candidate.clientContact}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Client Mail</span>
+                            {{candidate.clientMail}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Vendor</span>
+                            {{candidate.vendor}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Vendor Contact</span>
+                            {{candidate.vendorContact}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Vendor Mail</span>
+                            {{candidate.vendorMail}}
+                        </td>
+                        <td style="width:20%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                            <span
+                                [class]="'product-badge status-' + (candidate.status ? candidate.status.toLowerCase() : '')">{{candidate.status}}</span>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editCandidate(candidate)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                    (click)="deleteCandidate(candidate)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="candidateDialog" [style]="{width: '450px'}" header="Candidate Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="createdDate">Created Date</label>
+                    <p-calendar [(ngModel)]="candidate.createdDate"></p-calendar>
+                </div>
+                <div class="field">
+                    <label for="name">First Name</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="candidate.firstName" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !candidate.firstName}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !candidate.firstName">First Name is required.</small>
+                </div>
+                <div class="field">
+                    <label for="name">Last Name</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="candidate.lastName" required autofocus
+                        [ngClass]="{'ng-invalid ng-dirty' : submitted && !candidate.lastName}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !candidate.lastName">Last Name is required.</small>
+                </div>
+                <div class="field">
+                    <label for="technology">Technology</label>
+                    <input type="text" pInputText id="technology" [(ngModel)]="candidate.technology" autofocus />
+                </div>
+                <div class="field">
+                    <label for="Visa">Visa</label>
+                    <input type="text" pInputText id="visa" [(ngModel)]="candidate.visa" autofocus />
+                </div>
+                <div class="field">
+                    <label for="rate">Rate</label>
+                    <input type="text" pInputText id="rate" [(ngModel)]="candidate.rate" autofocus />
+                </div>
+                <div class="field">
+                    <label for="client">Client</label>
+                    <input type="text" pInputText id="client" [(ngModel)]="candidate.client" autofocus />
+                </div>
+                <div class="field">
+                    <label for="clientContact">Client Contact</label>
+                    <input type="text" pInputText id="clientContact" [(ngModel)]="candidate.clientContact" autofocus />
+                </div>
+                <div class="field">
+                    <label for="clientMail">Client Mail</label>
+                    <input type="text" pInputText id="clientMail" [(ngModel)]="candidate.clientMail" autofocus />
+                </div>
+                <div class="field">
+                    <label for="vendor">Vendor</label>
+                    <input type="text" pInputText id="vendor" [(ngModel)]="candidate.vendor" autofocus />
+                </div>
+                <div class="field">
+                    <label for="vendorMail">Vendor Mail</label>
+                    <input type="text" pInputText id="vendorMail" [(ngModel)]="candidate.vendorMail" autofocus />
+                </div>
+                <div class="field">
+                    <label for="vendorContact">Vendor Contact</label>
+                    <input type="text" pInputText id="vendorContact" [(ngModel)]="candidate.vendorContact" autofocus />
+                </div>
+                <div class="field">
+                    <label for="status">Status</label>
+                    <p-dropdown [options]="statuses" [(ngModel)]="candidate.status" optionLabel="label"
+                        optionValue="value"></p-dropdown>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveCandidate()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCandidateDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="candidate">Are you sure you want to delete <b>{{candidate.name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteCandidateDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCandidatesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected Candidates?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteCandidatesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

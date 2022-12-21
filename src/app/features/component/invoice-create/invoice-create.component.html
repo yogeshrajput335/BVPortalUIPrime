@@ -1,18 +1,19 @@
-<button pButton pRipple label="Invoice List" icon="pi pi-file" class="p-button-success mr-2" (click)="openInvoiceList()"></button>
+<p-speedDial [model]="items" direction="right" [mask]="true"></p-speedDial>
 <div class="book">
     <div class="page">
         <div class="subpage">
-            <div style="width:100%;display:flex" id="billFrom">
+            <div style="width:100%;display:flex;padding: 30px 30px 10px 30px;" id="billFrom">
                 <div style="width:30%">
-                    <span style="color:blue;font-size:16px;font-weight:700">INVOICE</span><br/>
+                    <span style="color:blue;font-size:18px;font-weight:700">INVOICE</span><br/>
+                    <br/>
                     <span>Company Name</span><br/>
                     <span>Address Line 1</span><br/>
                     <span>Address Line 2</span><br/>
                     <span>Address Line 3</span><br/>
-                    <a>Edit Company</a>
+                    <a (click)="displayCompanyPanel = true">Edit Company</a>
                 </div>
                 <div style="width:30%">
-                    <span></span><br/>
+                    <span></span><br/><br/><br/>
                     <span>Email Address</span><br/>
                     <span>Phone Number</span><br/>
                 </div>
@@ -21,9 +22,9 @@
                 </div>
             </div>
             <br/>
-            <div style="width:100%;background-color: #ddfff4;" id="billTo">
+            <div style="width:100%;background-color: #edf3fb;padding: 10px 30px 10px 30px;" id="billTo">
                 <div style="width:100%;padding:10px">
-                    <select><option>Customer 1</option></select>
+                    <p-dropdown [options]="customers" [(ngModel)]="selectedCustomer" optionLabel="name" optionValue="id"></p-dropdown>
                 </div>
                 <div style="width:100%;display:flex;padding:10px">
                     <div style="width:30%">
@@ -32,7 +33,7 @@
                         <span>Address Line 1</span><br/>
                         <span>Address Line 2</span><br/>
                         <span>Address Line 3</span><br/>
-                        <a>Edit Customer</a>
+                        <a (click)="displayCustomerPanel = true">Edit Customer</a>
                     </div>
                     <div style="width:30%">
                         <table>
@@ -57,15 +58,15 @@
                 </div>
             </div>
             <br/>
-            <div style="width:100%" id="tags">
+            <div style="width:100%;padding: 10px 30px 10px 30px;" id="tags">
                 <div style="width:100%;display: flex;">
                     <span style="width:50%">Tags (hidden)</span>
-                    <span style="width:50%;text-align: right;"><a>Manage Tags</a></span>
+                    <span style="width:50%;text-align: right;"><a (click)="displayTagPanel = true">Manage Tags</a></span>
                 </div>
                 <input type="text" style="width:100%"/>
             </div>
             <br/>
-            <div style="width:100%" id="productService">
+            <div style="width:100%;padding: 10px 30px 10px 30px;" id="productService">
                 <div style="width:100%;display: flex;">
                     <span style="width:80%">Product or service</span>
                     <span style="width:30%;">Amount</span>
@@ -89,7 +90,7 @@
                     </div>
                 </div>
                 <hr/>
-                <div style="width:100%;">
+                <div style="width:100%;padding: 10px">
                     <div style="width:100%;display: flex;">
                         <div style="width:5%">2.</div>
                         <div style="width:25%"><span>Product or service</span></div>
@@ -111,17 +112,71 @@
                 <hr/>
             </div>
             <br/>
-            <div style="width:100%" id="totalAndPayment">
-
+            <div style="width:100%;display: flex;padding: 10px 30px 10px 30px;" id="totalAndPayment">
+                <div style="width:50%">
+                    <strong>Customer payment options <a>Edit</a></strong><br/>
+                    <select><option>BANK</option></select><br/>
+                    <textarea  style="width:96%;border: none;" placeholder="Tell your customer how you want to get paid"></textarea>
+                </div>
+                <div style="width:50%">
+                    <table style="width:100%">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td style="text-align: right;">$11,520.00</td>
+                        </tr>
+                        <tr>
+                            <td>Sales tax</td>
+                            <td style="text-align: right;"><a>Set up</a></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><hr/></td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Total</td>
+                            <td style="text-align: right;">$11,520.00</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: right;"><a>Edit Invoice</a></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <br/>
-            <div style="width:100%" id="notes">
-
+            <div style="width:100%;padding: 10px 30px 10px 30px;" id="notes">
+                <div style="width:50%">
+                    <strong>Note to customer</strong><br/>
+                    <textarea  style="width:96%;border: none;" placeholder="Tell note to your customer"></textarea>
+                </div>
             </div>
             <br/>
-            <div style="width:100%" id="attachments">
-
+            <div style="width:100%;padding: 10px 30px 30px 30px;" id="attachments">
+                <div style="width:50%">
+                    <strong>Attachments</strong><br/>
+                    <input type="file" multiple />
+                </div>
             </div>
         </div>
     </div>
 </div>
+<p-sidebar [(visible)]="displayCustomerPanel"  position="right" [style]="{width:'30em'}">
+    <ng-template pTemplate="header">
+        <h1 style="font-weight:normal">Add/Edit Customer</h1>
+    </ng-template>
+    <ng-template pTemplate="content">Body Content</ng-template>
+    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
+</p-sidebar>
+<p-sidebar [(visible)]="displayCompanyPanel"  position="right" [style]="{width:'30em'}">
+    <ng-template pTemplate="header">
+        <h1 style="font-weight:normal">Edit Company</h1>
+    </ng-template>
+    <ng-template pTemplate="content">Body Content</ng-template>
+    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
+</p-sidebar>
+<p-sidebar [(visible)]="displayTagPanel"  position="right" [style]="{width:'30em'}">
+    <ng-template pTemplate="header">
+        <h1 style="font-weight:normal">Manage Tag</h1>
+    </ng-template>
+    <ng-template pTemplate="content">Body Content</ng-template>
+    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
+</p-sidebar>

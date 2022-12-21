@@ -16,6 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
+import {PasswordModule} from 'primeng/password';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { UserComponent } from './user.component';
         DropdownModule,
         RadioButtonModule,
         InputNumberModule,
-        DialogModule
+        DialogModule,
+        PasswordModule
     ],
     declarations: [UserComponent]
 })

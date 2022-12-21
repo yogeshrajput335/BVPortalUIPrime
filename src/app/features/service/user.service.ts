@@ -10,10 +10,10 @@ export class UserService {
 
     getAllUser() {
       return this.httpClient.get('User/GetUsers');
-  }
-    // getAllUserTypes() {
-    //   return this.httpClient.get('Employee/GetEmployee');
-    // }
+    }
+    getAllEmployeeForDropdown() {
+        return this.httpClient.get('Employee/GetEmployeeForDropdown');
+    }
     addUser(user: User) {
       return this.httpClient.post('User/InsertUser', user);
     }

@@ -8,4 +8,6 @@ import { InvoiceCreateComponent } from './invoice-create.component';
 	])],
 	exports: [RouterModule]
 })
-export class InvoiceCreateRoutingModule { }
+export class InvoiceCreateRoutingModule {
+
+}

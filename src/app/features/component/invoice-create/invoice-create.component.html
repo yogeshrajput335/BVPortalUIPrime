@@ -2,9 +2,9 @@
 <div class="book">
     <div class="page">
         <div class="subpage">
-            <div style="width:100%;display:flex;padding: 30px 30px 10px 30px;" id="billFrom">
-                <div style="width:30%">
-                    <span style="color:blue;font-size:18px;font-weight:700">INVOICE</span><br/>
+            <div id="billFrom">
+                <div class="companyDetails">
+                    <span class="invoiceHeader">INVOICE</span><br/>
                     <br/>
                     <span>Company Name</span><br/>
                     <span>Address Line 1</span><br/>
@@ -12,12 +12,12 @@
                     <span>Address Line 3</span><br/>
                     <a (click)="displayCompanyPanel = true">Edit Company</a>
                 </div>
-                <div style="width:30%">
+                <div class="companyContactDetails">
                     <span></span><br/><br/><br/>
                     <span>Email Address</span><br/>
                     <span>Phone Number</span><br/>
                 </div>
-                <div style="width:40%;text-align: right;padding-right: 50px;">
+                <div class="companyLogoDetails">
                     <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <hr/>
-                <div style="width:100%;padding: 10px">
+                <!-- <div style="width:100%;padding: 10px">
                     <div style="width:100%;display: flex;">
                         <div style="width:5%">2.</div>
                         <div style="width:25%"><span>Product or service</span></div>
@@ -107,7 +107,7 @@
                         <a><i class="pi pi-trash"></i></a>
                     </div>
                 </div>
-                <hr/>
+                <hr/>-->
                 <a><i class="pi pi-plus-circle"></i> Add product or service</a>
                 <hr/>
             </div>
@@ -164,19 +164,16 @@
         <h1 style="font-weight:normal">Add/Edit Customer</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
-    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
 </p-sidebar>
 <p-sidebar [(visible)]="displayCompanyPanel"  position="right" [style]="{width:'30em'}">
     <ng-template pTemplate="header">
         <h1 style="font-weight:normal">Edit Company</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
-    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
 </p-sidebar>
 <p-sidebar [(visible)]="displayTagPanel"  position="right" [style]="{width:'30em'}">
     <ng-template pTemplate="header">
         <h1 style="font-weight:normal">Manage Tag</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
-    <!-- <ng-template pTemplate="footer">Footer Content</ng-template> -->
 </p-sidebar>

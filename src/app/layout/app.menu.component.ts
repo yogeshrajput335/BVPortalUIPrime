@@ -60,17 +60,27 @@ export class AppMenuComponent implements OnInit {
                         icon: 'pi pi-fw pi-align-justify',
                         items: [
                             {
-                                label: 'Client',
+                                label: 'Company',
                                 icon: 'pi pi-fw pi-user',
                                 routerLink: ['/auth/login']
                             },
                             {
-                                label: 'Project',
+                                label: 'Customer',
                                 icon: 'pi pi-fw pi-times-circle',
                                 routerLink: ['/auth/error']
                             },
                             {
-                                label: 'Project Assignment',
+                                label: 'Product',
+                                icon: 'pi pi-fw pi-verified',
+                                routerLink: ['/auth/access']
+                            },
+                            {
+                                label: 'Service',
+                                icon: 'pi pi-fw pi-verified',
+                                routerLink: ['/auth/access']
+                            },
+                            {
+                                label: 'Payment Option',
                                 icon: 'pi pi-fw pi-verified',
                                 routerLink: ['/auth/access']
                             },

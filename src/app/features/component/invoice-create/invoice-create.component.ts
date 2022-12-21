@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './invoice-create.component.html',
-    styleUrls: ['./invoice-create.component.css'],
+    styleUrls: ['./invoice-create.component.scss'],
     providers: [MessageService]
 })
 export class InvoiceCreateComponent implements OnInit {

@@ -12,18 +12,11 @@ body {
 }
 .page {
     width: 210mm;
-    /* min-height: 297mm; */
-    /* padding: 5mm 0mm; */
     margin: 10mm auto;
     border: 1px #D3D3D3 solid;
     border-radius: 5px;
     background: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-.subpage {
-    /* padding: .3cm; */
-    /* height: 287mm; */
-
 }
 
 @page {
@@ -33,7 +26,6 @@ body {
 @media print {
     html, body {
         width: 210mm;
-        /* height: 297mm; */
     }
     .page {
         margin: 0;
@@ -44,5 +36,29 @@ body {
         box-shadow: initial;
         background: initial;
         page-break-after: always;
+    }
+}
+
+#billFrom{
+    width:100%;
+    display:flex;
+    padding: 30px 30px 10px 30px;
+
+    .companyDetails{
+        width:30%;
+
+        .invoiceHeader{
+            color:blue;
+            font-size:18px;
+            font-weight:700;
+        }
+    }
+    .companyContactDetails{
+        width:30%;
+    }
+    .companyLogoDetails{
+        width:40%;
+        text-align: right;
+        padding-right: 50px;
     }
 }

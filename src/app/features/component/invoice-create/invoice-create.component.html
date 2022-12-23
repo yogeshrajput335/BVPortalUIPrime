@@ -71,56 +71,47 @@
                 <input type="text" class="inputText"/>
             </div>
             <br/>
-            <div class="product">
-                <div class="productPrice">
-                    <span class="product">Product or service</span>
-                    <span class="amount">Amount</span>
-                </div>
-                <hr/>
-                <div class="productDetails">
-                    <div class="productDetailsStyle">
-                        <div class="sequenceNumber">1.</div>
-                        <div class="productService">
-                            <input type="text" class="productOrService" placeholder="Product or service"/>
-                            <select>
-                                <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
-                            </select>
 
+
+
+                <div style="width:100%;padding: 10px 30px 10px 30px;" id="productService">
+
+                    <div style="width:100%;display: flex;">
+                        <span style="width:80%">Product or service</span>
+                        <span style="width:30%;">Amount</span>
+                    </div>
+                    <hr/>
+                    <div style="width:100%;" *ngFor="let item of selectedProductServices;let i= index"  >
+                        <div style="width:100%;display: flex;" >
+                            <div style="width:5%">{{i+1}}.</div>
+                            <div style="width:25%">
+                                <!-- <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
+                                <select>
+                                    <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
+                                </select> -->
+                                <span class="p-float-label">
+                                    <p-dropdown class="p-inputtext-sm" inputId="dropdown" [autoDisplayFirst]="false" [options]="productServices" [(ngModel)]="selectedProductServices[i]" optionLabel="name"></p-dropdown>
+                                    <label for="dropdown">Product or service</label>
+                                </span>
+
+                            </div>
+                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
+                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].quantity" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
+                            <div style="width:5%">x</div>
+                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].rate" (change)="calculateTotal(i)" type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
+                            <div style="width:5%">=</div>
+                            <div style="width:30%">{{selectedProductServices[i].total | currency}}</div>
                         </div>
-                        <div style="width:10%"><input type="text" class="unit" placeholder="Unit"/></div>
-                        <div style="width:10%"><input type="text" class="quantity" placeholder="Qty"/></div>
-                        <div style="width:5%">x</div>
-                        <div style="width:10%"><input type="text" class="rate" placeholder="Rate"/></div>
-                        <div style="width:5%">=</div>
-                        <div style="width:30%"><input type="text" class="price" placeholder="$0.00"/></div>
+                        <br/>
+                        <div style="width:100%;display: flex;">
+                            <input [(ngModel)]="selectedProductServices[i].description" type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                            <a><i class="pi pi-trash" (click)="selectedProductServices.splice(i, 1);"></i></a>
+                        </div>
                     </div>
-                    <br/>
-                    <div class="item">
-                        <input type="text" class="itemDetails" placeholder="Enter item description or details"/>
-                        <a><i class="pi pi-trash"></i></a>
-                    </div>
-                </div>
+                    <hr/>
+                <a (click)="selectedProductServices.push({itemTypeId:null,unit:'',quantity:0,rate:0,total:0})"><i class="pi pi-plus-circle" ></i> Add product or service</a>
                 <hr/>
-                <!-- <div style="width:100%;padding: 10px">
-                    <div style="width:100%;display: flex;">
-                        <div style="width:5%">2.</div>
-                        <div style="width:25%"><span>Product or service</span></div>
-                        <div  style="width:10%"><span>Unit</span></div>
-                        <div  style="width:10%"><span>Qty</span></div>
-                        <div style="width:5%">x</div>
-                        <div  style="width:10%"><span>Rate</span></div>
-                        <div style="width:5%">=</div>
-                        <div style="width:30%"><span>$0.00</span></div>
-                    </div>
-                    <br/>
-                    <div style="width:100%;display: flex;">
-                        <input type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
-                        <a><i class="pi pi-trash"></i></a>
-                    </div>
-                </div>
-                <hr/>-->
-                <a><i class="pi pi-plus-circle"></i> Add product or service</a>
-                <hr/>
+
             </div>
             <br/>
             <div class="paymentDetails" id="totalAndPayment">
@@ -133,7 +124,7 @@
                     <table style="width:100%">
                         <tr>
                             <td>Subtotal</td>
-                            <td class="subtotal">$11,520.00</td>
+                            <td style="text-align: right;">{{grandTotal|currency}}</td>
                         </tr>
                         <tr>
                             <td>Sales tax</td>
@@ -144,7 +135,7 @@
                         </tr>
                         <tr>
                             <td>Invoice Total</td>
-                            <td class="invoiceTotal">$11,520.00</td>
+                            <td style="text-align: right;">{{grandTotal|currency}}</td>
                         </tr>
                         <tr>
                             <td></td>

@@ -24,23 +24,28 @@ export class InvoiceCreateComponent implements OnInit {
 
     displayCompanyPanel = false;
     displayTagPanel = false;
-    masterData:any
+    masterData:any={}
 
-    selectedCompany:any = null;
-    selectedCustomer:any = null;
+    selectedCompany:any = {};
+    selectedCustomer:any = {};
+    selectedProductServices:any[] = [];
     productServices:any[] = []
+    counter = Array;
 
     constructor(private messageService: MessageService,private router: Router,
         private commonService: CommonService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Create Invoice");
+        if(this.selectedProductServices.length==0){
+            this.selectedProductServices.push({itemTypeId:null,unit:'',quantity:0,rate:0,total:0})
+        }
         this.loadMasterDetails();
         this.items = [
             {
                 icon: 'pi pi-save',
                 command: () => {
-                    this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
+                    this.saveInvoice();
                 }
             },
             {
@@ -65,16 +70,32 @@ export class InvoiceCreateComponent implements OnInit {
             this.masterData = data;
             this.selectedCompany = this.masterData.company[0];
             this.masterData.product.forEach((element : any) => {
-                this.productServices.push({id:'product'+element.id,name:element.productName,isProduct:true})
+                this.productServices.push({itemTypeId:'product'+element.id,name:element.productName,isProduct:true,unit:element.unit,quantity:element.quantity??0,rate:element.rate,total:element.total??0})
             });
             this.masterData.service.forEach((element : any) => {
-                this.productServices.push({id:'service'+element.id,name:element.serviceName,isProduct:false})
+                this.productServices.push({itemTypeId:'service'+element.id,name:element.serviceName,isProduct:false,unit:element.unit,quantity:element.quantity??0,rate:element.rate,total:element.total??0})
             });
-            console.log(this.productServices)
         },
         (error: HttpErrorResponse) => {
             console.log(error.name + ' ' + error.message);
         });
+    }
+    saveInvoice(){
+        console.log(this.invoice)
+        console.log(this.selectedCompany)
+        console.log(this.selectedCustomer)
+        console.log(this.selectedProductServices)
+
+    }
+    grandTotal=0
+    calculateTotal(i:number){
+        if(!this.selectedProductServices[i].quantity || isNaN(Number(this.selectedProductServices[i].quantity))) this.selectedProductServices[i].quantity =0;
+        if(!this.selectedProductServices[i].rate || isNaN(Number(this.selectedProductServices[i].rate))) this.selectedProductServices[i].rate =0;
+        this.selectedProductServices[i].total = this.selectedProductServices[i].quantity*this.selectedProductServices[i].rate;
+        this.selectedProductServices.forEach(e => {
+            this.grandTotal += e.total;
+        });
+
     }
 
 

@@ -22,12 +22,12 @@
                 </div>
             </div>
             <br/>
-            <div style="width:100%;background-color: #edf3fb;padding: 10px 30px 10px 30px;" id="billTo">
-                <div style="width:100%;padding:10px">
+            <div id="billTo">
+                <div class ="customerDetails">
                     <p-dropdown [options]="masterData.customer" [(ngModel)]="selectedCustomer" optionLabel="customerName"></p-dropdown>
                 </div>
-                <div style="width:100%;display:flex;padding:10px">
-                    <div style="width:30%">
+                <div class="selectedCustomerDetails">
+                    <div class="editCustomerDetails">
                         <strong>Bill To</strong><br/>
                         <span>{{selectedCustomer?.customerName??''}}</span><br/>
                         <span>{{selectedCustomer?.addressLine1??''}}</span><br/>
@@ -35,15 +35,15 @@
                         <span>{{selectedCustomer?.addressLine3??''}}</span><br/>
                         <a (click)="displayCustomerPanel = true" >Edit Customer</a>
                     </div>
-                    <div style="width:30%">
+                    <div class="invoiceNumber">
                         <table>
                             <tr>
                                 <td>Invoice No.</td>
-                                <td><input type="text" style="width:80px" [(ngModel)]="invoice.invoiceNumber"/></td>
+                                <td><input type="text" [(ngModel)]="invoice.invoiceNumber"/></td>
                             </tr>
                             <tr>
                                 <td>Terms</td>
-                                <td><select style="width:80px" [(ngModel)]="invoice.term">
+                                <td><select [(ngModel)]="invoice.term">
                                     <option value="15">Net 15</option>
                                     <option value="30">Net 30</option>
                                     <option value="45">Net 45</option>
@@ -52,51 +52,51 @@
                             </tr>
                             <tr>
                                 <td>Invoice Date</td>
-                                <td><input type="text" style="width:80px"  [(ngModel)]="invoice.invoiceDate"/></td>
+                                <td><input type="text" [(ngModel)]="invoice.invoiceDate"/></td>
                             </tr>
                             <tr>
                                 <td>Due Date</td>
-                                <td><input type="text" style="width:80px"  [(ngModel)]="invoice.dueDate"/></td>
+                                <td><input type="text" [(ngModel)]="invoice.dueDate"/></td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
             <br/>
-            <div style="width:100%;padding: 10px 30px 10px 30px;" id="tags">
-                <div style="width:100%;display: flex;">
-                    <span style="width:50%">Tags (hidden)</span>
-                    <span style="width:50%;text-align: right;"><a (click)="displayTagPanel = true">Manage Tags</a></span>
+            <div class="tagDetails">
+                <div class="hiddenTagDetails">
+                    <span class="tagsHidden">Tags (hidden)</span>
+                    <span class="manageTags"><a (click)="displayTagPanel = true">Manage Tags</a></span>
                 </div>
-                <input type="text" style="width:100%"/>
+                <input type="text" class="inputText"/>
             </div>
             <br/>
-            <div style="width:100%;padding: 10px 30px 10px 30px;" id="productService">
-                <div style="width:100%;display: flex;">
-                    <span style="width:80%">Product or service</span>
-                    <span style="width:30%;">Amount</span>
+            <div class="product">
+                <div class="productPrice">
+                    <span class="product">Product or service</span>
+                    <span class="amount">Amount</span>
                 </div>
                 <hr/>
-                <div style="width:100%;">
-                    <div style="width:100%;display: flex;">
-                        <div style="width:5%">1.</div>
-                        <div style="width:25%">
-                            <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
+                <div class="productDetails">
+                    <div class="productDetailsStyle">
+                        <div class="sequenceNumber">1.</div>
+                        <div class="productService">
+                            <input type="text" class="productOrService" placeholder="Product or service"/>
                             <select>
                                 <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
                             </select>
 
                         </div>
-                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
-                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
+                        <div style="width:10%"><input type="text" class="unit" placeholder="Unit"/></div>
+                        <div style="width:10%"><input type="text" class="quantity" placeholder="Qty"/></div>
                         <div style="width:5%">x</div>
-                        <div style="width:10%"><input type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
+                        <div style="width:10%"><input type="text" class="rate" placeholder="Rate"/></div>
                         <div style="width:5%">=</div>
-                        <div style="width:30%"><input type="text" style="width:100%;border: none;" placeholder="$0.00"/></div>
+                        <div style="width:30%"><input type="text" class="price" placeholder="$0.00"/></div>
                     </div>
                     <br/>
-                    <div style="width:100%;display: flex;">
-                        <input type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                    <div class="item">
+                        <input type="text" class="itemDetails" placeholder="Enter item description or details"/>
                         <a><i class="pi pi-trash"></i></a>
                     </div>
                 </div>
@@ -123,46 +123,46 @@
                 <hr/>
             </div>
             <br/>
-            <div style="width:100%;display: flex;padding: 10px 30px 10px 30px;" id="totalAndPayment">
-                <div style="width:50%">
+            <div class="paymentDetails" id="totalAndPayment">
+                <div class="paymentOptions">
                     <strong>Customer payment options <a>Edit</a></strong><br/>
                     <select><option>BANK</option></select><br/>
-                    <textarea  style="width:96%;border: none;" placeholder="Tell your customer how you want to get paid"></textarea>
+                    <textarea  class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
                 </div>
-                <div style="width:50%">
+                <div class="amountCalculation">
                     <table style="width:100%">
                         <tr>
                             <td>Subtotal</td>
-                            <td style="text-align: right;">$11,520.00</td>
+                            <td class="subtotal">$11,520.00</td>
                         </tr>
                         <tr>
                             <td>Sales tax</td>
-                            <td style="text-align: right;"><a>Set up</a></td>
+                            <td class="salesTax"><a>Set up</a></td>
                         </tr>
                         <tr>
                             <td colspan="2"><hr/></td>
                         </tr>
                         <tr>
                             <td>Invoice Total</td>
-                            <td style="text-align: right;">$11,520.00</td>
+                            <td class="invoiceTotal">$11,520.00</td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="text-align: right;"><a>Edit Invoice</a></td>
+                            <td class="editInvoice"><a>Edit Invoice</a></td>
                         </tr>
                     </table>
                 </div>
             </div>
             <br/>
-            <div style="width:100%;padding: 10px 30px 10px 30px;" id="notes">
-                <div style="width:50%">
+            <div class="notes" id="notes">
+                <div class="noteToCustomer">
                     <strong>Note to customer</strong><br/>
-                    <textarea  style="width:96%;border: none;" placeholder="Tell note to your customer"></textarea>
+                    <textarea  class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
                 </div>
             </div>
             <br/>
-            <div style="width:100%;padding: 10px 30px 30px 30px;" id="attachments">
-                <div style="width:50%">
+            <div class="attachments" id="attachments">
+                <div class="attachmentFiles">
                     <strong>Attachments</strong><br/>
                     <input type="file" multiple />
                 </div>
@@ -170,21 +170,21 @@
         </div>
     </div>
 </div>
-<p-sidebar [(visible)]="displayCustomerPanel"  position="right" [style]="{width:'30em'}">
+<p-sidebar [(visible)]="displayCustomerPanel"  class="sidebar1">
     <ng-template pTemplate="header">
-        <h1 style="font-weight:normal">Add/Edit Customer</h1>
+        <h1 class="addOrEditCustomer">Add/Edit Customer</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
 </p-sidebar>
-<p-sidebar [(visible)]="displayCompanyPanel"  position="right" [style]="{width:'30em'}">
+<p-sidebar [(visible)]="displayCompanyPanel"  class="sidebar2">
     <ng-template pTemplate="header">
-        <h1 style="font-weight:normal">Edit Company</h1>
+        <h1 class="editCompany">Edit Company</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
 </p-sidebar>
-<p-sidebar [(visible)]="displayTagPanel"  position="right" [style]="{width:'30em'}">
+<p-sidebar [(visible)]="displayTagPanel"  class="sidebar3">
     <ng-template pTemplate="header">
-        <h1 style="font-weight:normal">Manage Tag</h1>
+        <h1 class="manageTag">Manage Tag</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
 </p-sidebar>

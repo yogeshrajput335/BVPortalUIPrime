@@ -6,10 +6,12 @@ body {
     background-color: gray;
     font: 12pt "Tahoma";
 }
+
 * {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
 }
+
 .page {
     width: 210mm;
     margin: 10mm auto;
@@ -23,10 +25,14 @@ body {
     size: A4;
     margin: 0;
 }
+
 @media print {
-    html, body {
+
+    html,
+    body {
         width: 210mm;
     }
+
     .page {
         margin: 0;
         border: initial;
@@ -39,26 +45,237 @@ body {
     }
 }
 
-#billFrom{
-    width:100%;
-    display:flex;
+#billFrom {
+    width: 100%;
+    display: flex;
     padding: 30px 30px 10px 30px;
 
-    .companyDetails{
-        width:30%;
+    .companyDetails {
+        width: 30%;
 
-        .invoiceHeader{
-            color:blue;
-            font-size:18px;
-            font-weight:700;
+        .invoiceHeader {
+            color: blue;
+            font-size: 18px;
+            font-weight: 700;
         }
     }
-    .companyContactDetails{
-        width:30%;
+
+    .companyContactDetails {
+        width: 30%;
     }
-    .companyLogoDetails{
-        width:40%;
+
+    .companyLogoDetails {
+        width: 40%;
         text-align: right;
         padding-right: 50px;
+    }
+}
+
+#billTo {
+    width: 100%;
+    background-color: #edf3fb;
+    padding: 10px 30px 10px 30px;
+
+    .customerDetails {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .selectedCustomerDetails {
+        width: 100%;
+        display: flex;
+        padding: 10px;
+
+        .editCustomerDetails {
+            width: 30%;
+        }
+
+        .invoiceNumber {
+            width: 30%;
+
+            .table {
+
+                tr,td {
+                    width: 80px;
+                }
+                tr,td{
+                    width:80px;
+                }
+                tr,td{
+                    width:80px;
+                }
+                tr,td{
+                    width:80px;
+                }
+            }
+        }
+    }
+}
+
+.tagDetails{
+    width:100%;
+    padding: 10px 30px 10px 30px; 
+
+    .hiddenTagDetails{
+        width:100%;
+        display: flex;
+
+        .tagsHidden{
+            width:50%;
+
+            .manageTags{
+                width:50%;
+                text-align: right;
+            }
+        }
+    }
+    .inputText{
+        width:100%;
+    }
+}
+.product{
+    width:100%;
+    padding: 10px 30px 10px 30px;
+
+    .productPrice{
+        width:100%;
+        display: flex;
+
+        .product{
+            width:80%;
+        }
+        .amount{
+            width:30%;
+        }
+    }
+    .productDetails{
+        width:100%;
+
+        .productDetailsStyle{
+            width:100%;
+            display: flex;
+            
+            .sequenceNumber{
+                width:5%;
+            }
+            .productService{
+                width:25%;
+
+                .productOrService{
+                    width:100%;
+                    border: none;
+                }
+            }
+            .unit{
+                width:100%;
+                border: none;  
+            }
+            .quantity{
+                width:100%;
+                border: none;
+            }
+            .rate{
+                width:100%;
+                border: none; 
+            }
+            .price{
+                width:100%;
+                border: none;  
+            }
+            }
+        }
+        .item{
+            width:100%;
+            display: flex;
+
+            .itemDetails{
+                width:96%;
+                border: none;
+            }
+        }
+    }
+
+    .paymentDetails{
+        width:100%;
+        display: flex;
+        padding: 10px 30px 10px 30px; 
+
+        .paymentOptions{
+            width:50%; 
+
+            .customerPayment{
+                width:96%;border: none;
+
+            }
+        }
+        .amountCalculation{
+            width:50%;
+
+            .table{
+                width:100%;
+
+                .subtotal tr,td{
+                    text-align: right;
+                }
+                .salesTax tr,td{
+                    text-align: right;
+                }
+                .invoiceTotal{
+                    text-align: right;
+                }
+                .editInovice tr,td{
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .notes{
+        width:100%;
+        padding: 10px 30px 10px 30px;
+
+        .noteToCustomer{
+            width:50%;
+
+            .tellNoteToCustomer{
+                width:96%;
+                border: none;
+            }
+        }
+    }
+
+    .attachments{
+        width:100%;
+        padding: 10px 30px 30px 30px;
+
+        .attachmentFiles{
+            width:50%;
+        }
+    }
+
+.sidebar1{
+    position:"right";
+    width:'30em';
+
+    .addOrEditCustomer{
+        font-weight:normal;
+    }
+}
+
+.sidebar2{
+    position:"right";
+    width:'30em';
+
+    .editCompany{
+        font-weight:normal
+    }
+}
+
+.sidebar3{
+    position:"right";
+    width:'30em';
+
+    .manageTag{
+        font-weight:normal
     }
 }

@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-speedDial [model]="items" direction="right" [mask]="true"></p-speedDial>
 <div class="book">
     <div class="page">
@@ -161,19 +162,29 @@
         </div>
     </div>
 </div>
-<p-sidebar [(visible)]="displayCustomerPanel"  class="sidebar1">
+<p-sidebar [(visible)]="displayCustomerPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">
-        <h1 class="addOrEditCustomer">Add/Edit Customer</h1>
+        <h1 class="addOrEditCustomer">Edit Customer</h1>
     </ng-template>
     <ng-template pTemplate="content">Body Content</ng-template>
 </p-sidebar>
-<p-sidebar [(visible)]="displayCompanyPanel"  class="sidebar2">
+<p-sidebar [(visible)]="displayCompanyPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">
         <h1 class="editCompany">Edit Company</h1>
     </ng-template>
-    <ng-template pTemplate="content">Body Content</ng-template>
+    <ng-template pTemplate="content">
+        <span class="p-float-label">
+            <input id="float-input" type="text" pInputText [(ngModel)]="selectedCompany.companyName">
+            <label for="float-input">Company Name</label>
+        </span>
+        <span class="p-float-label">
+            <input id="float-input" type="text" pInputText [(ngModel)]="selectedCompany.addressLine1">
+            <label for="float-input">Address Line 1</label>
+        </span>
+        <button pButton type="button" label="Save" (click)="EditCompany()"></button>
+    </ng-template>
 </p-sidebar>
-<p-sidebar [(visible)]="displayTagPanel"  class="sidebar3">
+<p-sidebar [(visible)]="displayTagPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">
         <h1 class="manageTag">Manage Tag</h1>
     </ng-template>

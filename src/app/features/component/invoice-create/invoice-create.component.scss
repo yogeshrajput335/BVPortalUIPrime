@@ -114,7 +114,7 @@ body {
 
 .tagDetails{
     width:100%;
-    padding: 10px 30px 10px 30px; 
+    padding: 10px 30px 10px 30px;
 
     .hiddenTagDetails{
         width:100%;
@@ -154,7 +154,7 @@ body {
         .productDetailsStyle{
             width:100%;
             display: flex;
-            
+
             .sequenceNumber{
                 width:5%;
             }
@@ -168,7 +168,7 @@ body {
             }
             .unit{
                 width:100%;
-                border: none;  
+                border: none;
             }
             .quantity{
                 width:100%;
@@ -176,11 +176,11 @@ body {
             }
             .rate{
                 width:100%;
-                border: none; 
+                border: none;
             }
             .price{
                 width:100%;
-                border: none;  
+                border: none;
             }
             }
         }
@@ -198,10 +198,10 @@ body {
     .paymentDetails{
         width:100%;
         display: flex;
-        padding: 10px 30px 10px 30px; 
+        padding: 10px 30px 10px 30px;
 
         .paymentOptions{
-            width:50%; 
+            width:50%;
 
             .customerPayment{
                 width:96%;border: none;
@@ -253,29 +253,27 @@ body {
         }
     }
 
-.sidebar1{
-    position:"right";
-    width:'30em';
+// .sidebar1{
+//     width:'30em';
 
-    .addOrEditCustomer{
-        font-weight:normal;
-    }
-}
+//     .addOrEditCustomer{
+//         font-weight:normal;
+//     }
+// }
 
-.sidebar2{
-    position:"right";
-    width:'30em';
+// .sidebar2{
 
-    .editCompany{
-        font-weight:normal
-    }
-}
+//     width:'30em';
 
-.sidebar3{
-    position:"right";
-    width:'30em';
+//     .editCompany{
+//         font-weight:normal
+//     }
+// }
 
-    .manageTag{
-        font-weight:normal
-    }
-}
+// .sidebar3{
+//     width:'30em';
+
+//     .manageTag{
+//         font-weight:normal
+//     }
+// }

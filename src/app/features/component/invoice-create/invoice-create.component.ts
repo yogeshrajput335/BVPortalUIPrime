@@ -6,6 +6,7 @@ import { Invoice } from './invoice-create';
 import { Router } from '@angular/router';
 import { CommonService } from '../../service/common.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CompanyService } from '../../service/company.service ';
 
 @Component({
     templateUrl: './invoice-create.component.html',
@@ -33,7 +34,8 @@ export class InvoiceCreateComponent implements OnInit {
     counter = Array;
 
     constructor(private messageService: MessageService,private router: Router,
-        private commonService: CommonService, private globalDataService: GlobalDataService) { }
+        private commonService: CommonService, private globalDataService: GlobalDataService,
+        private companyService:CompanyService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Create Invoice");
@@ -96,6 +98,15 @@ export class InvoiceCreateComponent implements OnInit {
             this.grandTotal += e.total;
         });
 
+    }
+    EditCompany(){
+        this.companyService.updateCompany(this.selectedCompany).subscribe((data: any) => {
+            this.displayCompanyPanel = false;
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
     }
 
 

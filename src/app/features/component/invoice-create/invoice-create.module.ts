@@ -18,6 +18,7 @@ import { InvoiceCreateComponent } from './invoice-create.component';
 import { InvoiceCreateRoutingModule } from './invoice-create-routing.module';
 import {SpeedDialModule} from 'primeng/speeddial';
 import {SidebarModule} from 'primeng/sidebar';
+import {CalendarModule} from 'primeng/calendar';
 @NgModule({
     imports: [
         CommonModule,
@@ -37,7 +38,8 @@ import {SidebarModule} from 'primeng/sidebar';
         InputNumberModule,
         DialogModule,
         SpeedDialModule,
-        SidebarModule
+        SidebarModule,
+        CalendarModule
     ],
     declarations: [InvoiceCreateComponent]
 })

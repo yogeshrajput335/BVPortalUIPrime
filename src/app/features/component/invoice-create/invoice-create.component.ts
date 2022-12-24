@@ -32,13 +32,21 @@ export class InvoiceCreateComponent implements OnInit {
     selectedProductServices:any[] = [];
     productServices:any[] = []
     counter = Array;
+    grandTotal=0
 
     constructor(private messageService: MessageService,private router: Router,
         private commonService: CommonService, private globalDataService: GlobalDataService,
-        private companyService:CompanyService) { }
+        private companyService:CompanyService,private invoiceService : InvoiceService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("Create Invoice");
+        this.globalDataService.getInvoice().subscribe((param: any) => {
+            this.invoice = param;
+            this.selectedCompany = this.invoice.companyId
+            this.selectedCustomer = this.invoice.customerId
+            this.selectedProductServices = this.invoice.products
+            console.log(this.invoice)
+        });
         if(this.selectedProductServices.length==0){
             this.selectedProductServices.push({itemTypeId:null,unit:'',quantity:0,rate:0,total:0})
         }
@@ -83,19 +91,45 @@ export class InvoiceCreateComponent implements OnInit {
         });
     }
     saveInvoice(){
-        console.log(this.invoice)
-        console.log(this.selectedCompany)
-        console.log(this.selectedCustomer)
-        console.log(this.selectedProductServices)
+        this.invoice.products = this.selectedProductServices
+        this.invoice.companyId = this.selectedCompany.id
+        this.invoice.companyName = this.selectedCompany.companyName
+        this.invoice.companyAddressLine1 = this.selectedCompany.addressLine1
+        this.invoice.companyAddressLine2 = this.selectedCompany.addressLine2
+        this.invoice.companyAddressLine3 = this.selectedCompany.addressLine3
+        this.invoice.companyEmailAddress = this.selectedCompany.emailAddress
+        this.invoice.companyPhoneNumber = this.selectedCompany.phoneNumber
+        this.invoice.customerId = this.selectedCustomer.id
+        this.invoice.customerName = this.selectedCustomer.customerName
+        this.invoice.customerAddressLine1 = this.selectedCustomer.addressLine1
+        this.invoice.customerAddressLine2 = this.selectedCustomer.addressLine2
+        this.invoice.customerAddressLine3 = this.selectedCustomer.addressLine3
+        if(this.invoice.id==0){
+            this.invoiceService.addInvoice(this.invoice).subscribe((data: any) => {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Created', life: 3000 });
+                this.router.navigateByUrl('/features/invoice-list');
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            });
+        } else {
+            this.invoiceService.updateInvoice(this.invoice).subscribe((data: any) => {
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Updated', life: 3000 });
+                this.router.navigateByUrl('/features/invoice-list');
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            });
+        }
 
     }
-    grandTotal=0
+
     calculateTotal(i:number){
         if(!this.selectedProductServices[i].quantity || isNaN(Number(this.selectedProductServices[i].quantity))) this.selectedProductServices[i].quantity =0;
         if(!this.selectedProductServices[i].rate || isNaN(Number(this.selectedProductServices[i].rate))) this.selectedProductServices[i].rate =0;
         this.selectedProductServices[i].total = this.selectedProductServices[i].quantity*this.selectedProductServices[i].rate;
         this.selectedProductServices.forEach(e => {
-            this.grandTotal += e.total;
+            this.invoice.total += e.total;
         });
 
     }

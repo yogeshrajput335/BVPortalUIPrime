@@ -31,10 +31,10 @@
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
-                        <th pSortableColumn="createdDate">Date <p-sortIcon field="createdDate"></p-sortIcon></th>
-                        <th pSortableColumn="invoiceNo">No. <p-sortIcon field="invoiceNo"></p-sortIcon></th>
-                        <th pSortableColumn="clientName">Customer <p-sortIcon field="clientName"></p-sortIcon></th>
-                        <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+                        <th pSortableColumn="invoiceDate">Date <p-sortIcon field="invoiceDate"></p-sortIcon></th>
+                        <th pSortableColumn="invoiceNumber">No. <p-sortIcon field="invoiceNumber"></p-sortIcon></th>
+                        <th pSortableColumn="customerName">Customer <p-sortIcon field="customerName"></p-sortIcon></th>
+                        <th pSortableColumn="total">Amount <p-sortIcon field="total"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
                         <th>Action</th>
                     </tr>
@@ -46,19 +46,19 @@
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Date</span>
-                            {{invoice.createdDate}}
+                            {{invoice.invoiceDate | date}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">No.</span>
-                            {{invoice.invoiceNo}}
+                            {{invoice.invoiceNumber}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Customer</span>
-                            {{invoice.clientName}}
+                            {{invoice.customerName}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Amount</span>
-                            {{invoice.amount}}
+                            {{invoice.total}}
                         </td>
                         <td style="width:20%; min-width: 10rem;"><span class="p-column-title">Status</span>
                             <span [class]="'product-badge status-' + (invoice.status ? invoice.status.toLowerCase() : '')">{{invoice.status}}</span>

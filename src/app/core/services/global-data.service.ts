@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class GlobalDataService {
 
     private pageName = new BehaviorSubject<any>(undefined);
+    private invoice = new BehaviorSubject<any>(undefined);
 
     getPageName(): BehaviorSubject<any> {
         return this.pageName;
@@ -14,5 +15,13 @@ export class GlobalDataService {
 
     setPageName(param: any): void {
         this.pageName.next(param);
+    }
+
+    getInvoice(): BehaviorSubject<any> {
+        return this.invoice;
+    }
+
+    setInvoice(param: any): void {
+        this.invoice.next(param);
     }
 }

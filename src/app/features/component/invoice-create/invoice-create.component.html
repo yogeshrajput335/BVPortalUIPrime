@@ -53,11 +53,15 @@
                             </tr>
                             <tr>
                                 <td>Invoice Date</td>
-                                <td><input type="text" [(ngModel)]="invoice.invoiceDate"/></td>
+                                <td>
+                                    <p-calendar [(ngModel)]="invoice.invoiceDate"></p-calendar>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Due Date</td>
-                                <td><input type="text" [(ngModel)]="invoice.dueDate"/></td>
+                                <td>
+                                    <p-calendar [(ngModel)]="invoice.dueDate"></p-calendar>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -125,7 +129,7 @@
                     <table style="width:100%">
                         <tr>
                             <td>Subtotal</td>
-                            <td style="text-align: right;">{{grandTotal|currency}}</td>
+                            <td style="text-align: right;">{{invoice.total|currency}}</td>
                         </tr>
                         <tr>
                             <td>Sales tax</td>
@@ -136,7 +140,7 @@
                         </tr>
                         <tr>
                             <td>Invoice Total</td>
-                            <td style="text-align: right;">{{grandTotal|currency}}</td>
+                            <td style="text-align: right;">{{invoice.total|currency}}</td>
                         </tr>
                         <tr>
                             <td></td>

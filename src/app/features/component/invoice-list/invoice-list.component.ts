@@ -55,15 +55,6 @@ export class InvoiceListComponent implements OnInit {
             { label: 'SENT', value: 'sent' }
         ];
     }
-
-    // loadAssets(){
-    //     this.invoiceService.getAllAsset().subscribe((data: any) => {
-    //         this.assets = data;
-    //     },
-    //     (error: HttpErrorResponse) => {
-    //         console.log(error.name + ' ' + error.message);
-    //     });
-    // }
     loadInvoiceList(){
         this.invoiceService.getAllInvoices().subscribe((data: any) => {
             this.invoices = data;
@@ -75,9 +66,6 @@ export class InvoiceListComponent implements OnInit {
 
     openNew() {
         this.router.navigateByUrl('/features/invoice-create');
-        // this.invoice = {};
-        // this.submitted = false;
-        // this.assettypeDialog = true;
     }
 
     deleteSelectedProducts() {
@@ -85,8 +73,9 @@ export class InvoiceListComponent implements OnInit {
     }
 
     editProduct(invoice: InvoiceList) {
-        this.invoice = { ...invoice };
-        this.assettypeDialog = true;
+        this.globalDataService.setInvoice(invoice);
+        this.router.navigateByUrl('/features/invoice-create');
+
     }
 
     deleteProduct(invoice: InvoiceList) {

@@ -13,13 +13,14 @@ export interface Invoice {
     companyAddressLine1?:string;
     companyAddressLine2?: string;
     companyAddressLine3?: string;
+    companyEmailAddress?: string;
+    companyPhoneNumber?: string;
     customerId?:number;
     customerName?:string;
     customerAddressLine1?:string;
     customerAddressLine2?: string;
     customerAddressLine3?: string;
-    customerEmailAddress?: string;
-    customerPhoneNumber?: string;
     status?: string;
+    total?:number;
     products?: any;
 }

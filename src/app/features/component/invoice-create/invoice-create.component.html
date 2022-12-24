@@ -170,21 +170,80 @@
     <ng-template pTemplate="header">
         <h1 class="addOrEditCustomer">Edit Customer</h1>
     </ng-template>
-    <ng-template pTemplate="content">Body Content</ng-template>
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="customerName">Customer Name</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.customerName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedCustomer.customerName}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedCustomer.customerName">Customer Name is required.</small>
+        </div>
+        <div class="field">
+            <label for="addressLine1">Address Line1</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine1" autofocus />
+        </div>
+        <div class="field">
+            <label for="addressLine2">Address Line2</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine2" autofocus />
+        </div>
+        <div class="field">
+            <label for="addressLine3">Address Line3</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine3" autofocus />
+        </div>
+        <div class="field">
+            <label for="emailAddress">Email Address</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.emailAddress" autofocus />
+        </div>
+        <div class="field">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.phoneNumber" autofocus />
+        </div>
+        <div class="field">
+            <label for="term">Term</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.term" autofocus />
+        </div>
+        <div class="field">
+            <label for="status">Status</label>
+            <p-dropdown [options]="statuses" [(ngModel)]="selectedCustomer.status" optionLabel="label" optionValue="value"></p-dropdown>
+        </div>
+    </ng-template>
 </p-sidebar>
 <p-sidebar [(visible)]="displayCompanyPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">
         <h1 class="editCompany">Edit Company</h1>
     </ng-template>
     <ng-template pTemplate="content">
-        <span class="p-float-label">
-            <input id="float-input" type="text" pInputText [(ngModel)]="selectedCompany.companyName">
-            <label for="float-input">Company Name</label>
-        </span>
-        <span class="p-float-label">
-            <input id="float-input" type="text" pInputText [(ngModel)]="selectedCompany.addressLine1">
-            <label for="float-input">Address Line 1</label>
-        </span>
+        <div class="field">
+            <label for="companyName">Company Name</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.companyName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedCompany.companyName}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedCompany.companyName">Company Name is required.</small>
+        </div>
+        <div class="field">
+            <label for="addressLine1">Address Line1</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine1" autofocus />
+        </div>
+        <div class="field">
+            <label for="addressLine2">Address Line2</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine2" autofocus />
+        </div>
+        <div class="field">
+            <label for="addressLine3">Address Line3</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine3" autofocus />
+        </div>
+        <div class="field">
+            <label for="emailAddress">Email Address</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.emailAddress" autofocus />
+        </div>
+        <div class="field">
+            <label for="phoneNumber">Phone Number</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.phoneNumber" autofocus />
+        </div>
+        <div class="field">
+            <label for="companyLogo">Company Logo</label>
+            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.companyLogo" autofocus />
+        </div>
+        <div class="field">
+            <label for="status">Status</label>
+            <p-dropdown [options]="statuses" [(ngModel)]="selectedCompany.status" optionLabel="label" optionValue="value"></p-dropdown>
+        </div>
         <button pButton type="button" label="Save" (click)="EditCompany()"></button>
     </ng-template>
 </p-sidebar>

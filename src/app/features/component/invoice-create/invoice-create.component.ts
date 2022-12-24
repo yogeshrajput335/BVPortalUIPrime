@@ -20,14 +20,17 @@ export class InvoiceCreateComponent implements OnInit {
     items: MenuItem[] = [];
 
     customers: any[] = [];
-    //selectedCustomer:any;
+    // selectedCustomer:any;
     displayCustomerPanel = false;
+
+    submitted: boolean = false;
 
     displayCompanyPanel = false;
     displayTagPanel = false;
     masterData:any={}
 
     selectedCompany:any = {};
+    statuses: any[] = [];
     selectedCustomer:any = {};
     selectedProductServices:any[] = [];
     productServices:any[] = []
@@ -39,6 +42,10 @@ export class InvoiceCreateComponent implements OnInit {
         private companyService:CompanyService,private invoiceService : InvoiceService) { }
 
     ngOnInit() {
+        this.statuses = [
+            { label: 'ACTIVE', value: 'active' },
+            { label: 'INACTIVE', value: 'inactive' }
+        ];
         this.globalDataService.setPageName("Create Invoice");
         this.globalDataService.getInvoice().subscribe((param: any) => {
             this.invoice = param;
@@ -142,6 +149,6 @@ export class InvoiceCreateComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
-
+    
 
 }

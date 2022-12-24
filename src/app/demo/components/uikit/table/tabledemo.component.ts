@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Customer, Representative } from 'src/app/demo/api/customer';
-import { CustomerService } from 'src/app/demo/service/customer.service';
 import { Product } from 'src/app/demo/api/product';
-import { ProductService } from 'src/app/demo/service/product.service';
 import { Table } from 'primeng/table';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
@@ -46,19 +44,19 @@ export class TableDemoComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private customerService: CustomerService, private productService: ProductService) { }
+    constructor() { }
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then(customers => {
-            this.customers1 = customers;
-            this.loading = false;
+        // this.customerService.getCustomersLarge().then(customers => {
+        //     this.customers1 = customers;
+        //     this.loading = false;
 
-            // @ts-ignore
-            this.customers1.forEach(customer => customer.date = new Date(customer.date));
-        });
-        this.customerService.getCustomersMedium().then(customers => this.customers2 = customers);
-        this.customerService.getCustomersLarge().then(customers => this.customers3 = customers);
-        this.productService.getProductsWithOrdersSmall().then(data => this.products = data);
+        //     // @ts-ignore
+        //     this.customers1.forEach(customer => customer.date = new Date(customer.date));
+        // });
+        // this.customerService.getCustomersMedium().then(customers => this.customers2 = customers);
+        // this.customerService.getCustomersLarge().then(customers => this.customers3 = customers);
+        // // this.productService.getProductsWithOrdersSmall().then(data => this.products = data);
 
         this.representatives = [
             { name: 'Amy Elsner', image: 'amyelsner.png' },

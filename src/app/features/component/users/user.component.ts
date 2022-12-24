@@ -2,7 +2,6 @@ import { GlobalDataService } from './../../../core/services/global-data.service'
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from './user';
 import { UserService } from '../../service/user.service';
@@ -38,7 +37,7 @@ export class UserComponent implements OnInit {
     employees = []
 
 
-    constructor(private productService: ProductService, private messageService: MessageService,
+    constructor(private messageService: MessageService,
         private userService: UserService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {

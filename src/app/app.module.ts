@@ -4,9 +4,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
-import { ProductService } from './demo/service/product.service';
 import { CountryService } from './demo/service/country.service';
-import { CustomerService } from './demo/service/customer.service';
 import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
@@ -20,6 +18,10 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { InvoiceService } from './features/service/invoice-list.service';
 import { CandidateService } from './features/service/candidate.service ';
 import { CommonService } from './features/service/common.service';
+import { CompanyService } from './features/service/company.service ';
+// import { CustomerService } from './demo/service/customer.service';
+import { ProductService } from './features/service/product.service';
+import { CustomerService } from './features/service/customer.service ';
 
 export function tokenGetter() {
     return localStorage.getItem("token");
@@ -45,8 +47,10 @@ export function tokenGetter() {
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService, AssetService,AssetTypeService,UserService,
-        InvoiceService ,EmployeeService,CandidateService,CommonService
+        PhotoService, AssetService,AssetTypeService,UserService,
+        InvoiceService ,EmployeeService,CandidateService,CommonService,CompanyService,
+        ProductService,
+        
     ],
     bootstrap: [AppComponent]
 })

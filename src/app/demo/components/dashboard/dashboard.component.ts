@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../api/product';
-import { ProductService } from '../../service/product.service';
 import { Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { GlobalDataService } from 'src/app/core/services/global-data.service';
@@ -21,7 +20,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService, private globalDataService: GlobalDataService) {
+    constructor(public layoutService: LayoutService, private globalDataService: GlobalDataService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
             this.initChart();
         });
@@ -30,7 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.globalDataService.setPageName("Dashboard");
         this.initChart();
-        this.productService.getProductsSmall().then(data => this.products = data);
+        // this.productService.getProductsSmall().then(data => this.products = data);
 
         this.items = [
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },

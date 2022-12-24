@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
 import { AssetService } from '../../service/asset.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AssetType } from './asset-type';
@@ -41,7 +40,7 @@ export class AssetTypeComponent implements OnInit {
     rowsPerPageOptions = [5, 10, 20];
 
 
-    constructor(private productService: ProductService, private messageService: MessageService,
+    constructor(private messageService: MessageService,
         private assettypeService: AssetTypeService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {

@@ -1,0 +1,157 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedCompanies()" [disabled]="!selectedCompanies || !selectedCompanies.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="companies" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['companyName','addressLine1','addressLine2','addressLine3','emailAddress','phoneNumber','companyLogo','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedCompanies" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Manage Companies</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="companyName">Company Name<p-sortIcon field="companyName"></p-sortIcon></th>
+                        <th pSortableColumn="addressLine1">Address Line1<p-sortIcon field="addressLine1"></p-sortIcon></th>
+                        <th pSortableColumn="addressLine2">Address Line2<p-sortIcon field="addressLine2"></p-sortIcon></th>
+                        <th pSortableColumn="addressLine3">Address Line3<p-sortIcon field="addressLine3"></p-sortIcon></th>
+                        <th pSortableColumn="emailAddress">Email Address<p-sortIcon field="emailAddress"></p-sortIcon></th>
+                        <th pSortableColumn="phoneNumber">Phone Number<p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                        <th pSortableColumn="companyLogo">Company Logo<p-sortIcon field="companyLogo"></p-sortIcon></th>
+                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-company>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="company"></p-tableCheckbox>
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Company Name</span>
+                            {{company.companyName}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Address Line1</span>
+                            {{company.addressLine1}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Address Line2</span>
+                            {{company.addressLine2}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Address Line3</span>
+                            {{company.addressLine3}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Email Address</span>
+                            {{company.emailAddress}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Phone Number</span>
+                            {{company.phoneNumber}}
+                        </td>
+                        <td style="width:20%; min-width:10rem;">
+                            <span class="p-column-title">Company Logo</span>
+                            {{company.companyLogo}}
+                        </td>
+                        <td style="width:20%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                            <span [class]="'product-badge status-' + (company.status ? company.status.toLowerCase() : '')">{{company.status}}</span>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editCompany(company)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteCompany(company)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="companyDialog" [style]="{width: '450px'}" header="Company Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="field">
+                    <label for="companyName">Company Name</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.companyName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !company.companyName}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !company.companyName">Company Name is required.</small>
+                </div>
+                <div class="field">
+                    <label for="addressLine1">Address Line1</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.addressLine1" autofocus />
+                </div>
+                <div class="field">
+                    <label for="addressLine2">Address Line2</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.addressLine2" autofocus />
+                </div>
+                <div class="field">
+                    <label for="addressLine3">Address Line3</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.addressLine3" autofocus />
+                </div>
+                <div class="field">
+                    <label for="emailAddress">Email Address</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.emailAddress" autofocus />
+                </div>
+                <div class="field">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.phoneNumber" autofocus />
+                </div>
+                <div class="field">
+                    <label for="companyLogo">Company Logo</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="company.companyLogo" autofocus />
+                </div>
+                <div class="field">
+                    <label for="status">Status</label>
+                    <p-dropdown [options]="statuses" [(ngModel)]="company.status" optionLabel="label" optionValue="value"></p-dropdown>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveCompany()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCompanyDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="company">Are you sure you want to delete <b>{{company.companyName}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteCompanyDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteCompaniesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected Companies?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteCompaniesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

@@ -61,18 +61,18 @@ export class AppMenuComponent implements OnInit {
                         items: [
                             {
                                 label: 'Company',
-                                icon: 'pi pi-fw pi-user',
-                                routerLink: ['/auth/login']
+                                icon: 'pi pi-fw pi-building',
+                                routerLink: ['/features/company']
                             },
                             {
                                 label: 'Customer',
                                 icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                routerLink: ['/features/customer']
                             },
                             {
                                 label: 'Product',
                                 icon: 'pi pi-fw pi-verified',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/product']
                             },
                             {
                                 label: 'Service',

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 import { Product } from 'src/app/demo/api/product';
-import { ProductService } from 'src/app/demo/service/product.service';
+
 
 @Component({
     templateUrl: './listdemo.component.html'
@@ -23,10 +23,10 @@ export class ListDemoComponent implements OnInit {
 
     orderCities: any[] = [];
 
-    constructor(private productService: ProductService) { }
+    constructor() { }
 
     ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
+        // this.productService.getProducts().then(data => this.products = data);
 
         this.sourceCities = [
             { name: 'San Francisco', code: 'SF' },

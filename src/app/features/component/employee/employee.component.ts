@@ -2,7 +2,6 @@ import { GlobalDataService } from './../../../core/services/global-data.service'
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ProductService } from 'src/app/demo/service/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Employee } from './employee';
 import { EmployeeService } from '../../service/employee.service';
@@ -36,7 +35,7 @@ export class EmployeeComponent implements OnInit {
     rowsPerPageOptions = [5, 10, 20];
 
 
-    constructor(private productService: ProductService, private messageService: MessageService,
+    constructor(private messageService: MessageService,
         private employeeService: EmployeeService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {

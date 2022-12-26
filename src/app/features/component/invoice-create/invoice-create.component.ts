@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../service/common.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CompanyService } from '../../service/company.service ';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
     templateUrl: './invoice-create.component.html',
@@ -20,7 +21,7 @@ export class InvoiceCreateComponent implements OnInit {
     items: MenuItem[] = [];
 
     customers: any[] = [];
-    // selectedCustomer:any;
+
     displayCustomerPanel = false;
 
     submitted: boolean = false;
@@ -36,108 +37,184 @@ export class InvoiceCreateComponent implements OnInit {
     productServices:any[] = []
     counter = Array;
     grandTotal=0
+    invoiceForm : FormGroup
 
     constructor(private messageService: MessageService,private router: Router,
         private commonService: CommonService, private globalDataService: GlobalDataService,
-        private companyService:CompanyService,private invoiceService : InvoiceService) { }
+        private companyService:CompanyService,private invoiceService : InvoiceService,
+        private fb:FormBuilder) {
+            this.invoiceForm = this.fb.group({
+                id: 0,
+                invoiceNumber: '',
+                invoiceDate: '',
+                term: 0,
+                dueDate: '',
+                companyId: 0,
+                companyName: '',
+                companyAddressLine1: '',
+                companyAddressLine2: '',
+                companyAddressLine3: '',
+                companyEmailAddress: '',
+                companyPhoneNumber: '',
+                customerId: 0,
+                customerName: '',
+                customerAddressLine1: '',
+                customerAddressLine2: '',
+                customerAddressLine3: '',
+                status: '',
+                total: 0,
+                products: this.fb.array([{
+                    id: 0,
+                    InvoiceId: 0,
+                    Product: '',
+                    Service: '',
+                    itemTypeId: '',
+                    Unit: '',
+                    Quantity: 0,
+                    Rate: 0,
+                    Total: 0,
+                    IsProduct: null,
+                }]) ,
+              });
+        }
 
+        get products() : FormArray {
+            return this.invoiceForm.get("products") as FormArray
+          }
+
+        newProduct(): FormGroup {
+        return this.fb.group({
+            id: 0,
+            InvoiceId: 0,
+            Product: '',
+            Service: '',
+            itemTypeId: '',
+            Unit: '',
+            Quantity: 0,
+            Rate: 0,
+            Total: 0,
+            IsProduct: null,
+        })
+         }
+         addProducts() {
+            this.products.push(this.newProduct());
+         }
+         removeProduct(i:number) {
+            this.products.removeAt(i);
+          }
+
+          onSubmit() {
+            console.log(this.invoiceForm.value);
+            if(this.invoiceForm.get('id')?.value===0){
+                this.invoiceService.addInvoice(this.invoiceForm.value).subscribe((data: any) => {
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Created', life: 3000 });
+                    this.router.navigateByUrl('/features/invoice-list');
+                },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                });
+            } else {
+                this.invoiceService.updateInvoice(this.invoiceForm.value).subscribe((data: any) => {
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Updated', life: 3000 });
+                    this.router.navigateByUrl('/features/invoice-list');
+                },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                });
+            }
+        }
     ngOnInit() {
         this.statuses = [
             { label: 'ACTIVE', value: 'active' },
             { label: 'INACTIVE', value: 'inactive' }
         ];
         this.globalDataService.setPageName("Create Invoice");
-        this.globalDataService.getInvoice().subscribe((param: any) => {
-            this.invoice = param;
-            this.selectedCompany = this.invoice.companyId
-            this.selectedCustomer = this.invoice.customerId
-            this.selectedProductServices = this.invoice.products
-            console.log(this.invoice)
-        });
-        if(this.selectedProductServices.length==0){
-            this.selectedProductServices.push({itemTypeId:null,unit:'',quantity:0,rate:0,total:0})
-        }
-        this.loadMasterDetails();
-        this.items = [
-            {
-                icon: 'pi pi-save',
-                command: () => {
-                    this.saveInvoice();
-                }
-            },
-            {
-                icon: 'pi pi-print',
-                command: () => {
-                    this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
-                }
-            },
-            {
-                icon: 'pi pi-list',
-                command: () => {
-                    this.router.navigateByUrl('/features/invoice-list');
-                }
-            }
 
-        ];
-        this.customers = [{id:1,name:'Customer 1'},{id:2,name:'Customer 2'}]
+        this.loadMasterDetails();
     }
     loadMasterDetails(){
         let masters = ['Customer','Company','Product','Service','PaymentOption']
         this.commonService.GetMasterDetails(masters).subscribe((data: any) => {
             this.masterData = data;
-            this.selectedCompany = this.masterData.company[0];
+
             this.masterData.product.forEach((element : any) => {
                 this.productServices.push({itemTypeId:'product'+element.id,name:element.productName,isProduct:true,unit:element.unit,quantity:element.quantity??0,rate:element.rate,total:element.total??0})
             });
             this.masterData.service.forEach((element : any) => {
                 this.productServices.push({itemTypeId:'service'+element.id,name:element.serviceName,isProduct:false,unit:element.unit,quantity:element.quantity??0,rate:element.rate,total:element.total??0})
             });
+            this.invoiceForm.setValue({
+                id: 0,
+                invoiceNumber: 0,
+                invoiceDate: '',
+                term: 15,
+                dueDate: '',
+                companyId: this.masterData.company[0].id,
+                companyName: this.masterData.company[0].companyName,
+                companyAddressLine1: this.masterData.company[0].addressLine1,
+                companyAddressLine2: this.masterData.company[0].addressLine2,
+                companyAddressLine3: this.masterData.company[0].addressLine3,
+                companyEmailAddress: this.masterData.company[0].emailAddress,
+                companyPhoneNumber: this.masterData.company[0].phoneNumber,
+                customerId: this.masterData.customer[0].id,
+                customerName: this.masterData.customer[0].customerName,
+                customerAddressLine1: this.masterData.customer[0].addressLine1,
+                customerAddressLine2: this.masterData.customer[0].addressLine2,
+                customerAddressLine3: this.masterData.customer[0].addressLine3,
+                status: 'NEW',
+                total: 0,
+                products: [{
+                    id: 0,
+                    InvoiceId: 0,
+                    Product: '',
+                    Service: '',
+                    itemTypeId: '',
+                    Unit: '',
+                    Quantity: 0,
+                    Rate: 0,
+                    Total: 0,
+                    IsProduct: null,
+                }]
+             });
+
+            this.globalDataService.getInvoice().subscribe((param: any) => {
+                this.invoiceForm.setValue({
+                    id: param.id,
+                    invoiceNumber: param.invoiceNumber,
+                    invoiceDate: param.invoiceDate,
+                    term: param.term,
+                    dueDate: param.dueDate,
+                    companyId: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].id:param.companyId,
+                    companyName: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].companyName:param.companyName,
+                    companyAddressLine1: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].addressLine1:param.companyAddressLine1,
+                    companyAddressLine2: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].addressLine2:param.companyAddressLine2,
+                    companyAddressLine3: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].addressLine3:param.companyAddressLine3,
+                    companyEmailAddress: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].emailAddress:param.companyEmailAddress,
+                    companyPhoneNumber: (param.companyId ==null || param.companyId ==0)? this.masterData.company[0].phoneNumber:param.companyPhoneNumber,
+                    customerId: (param.customerId ==null || param.customerId ==0)? this.masterData.customer[0].id:param.customerId,
+                    customerName: (param.customerId ==null || param.customerId ==0)? this.masterData.customer[0].customerName:param.customerName,
+                    customerAddressLine1: (param.customerId ==null || param.customerId ==0)? this.masterData.customer[0].addressLine1:param.customerAddressLine1,
+                    customerAddressLine2: (param.customerId ==null || param.customerId ==0)? this.masterData.customer[0].addressLine2:param.customerAddressLine2,
+                    customerAddressLine3: (param.customerId ==null || param.customerId ==0)? this.masterData.customer[0].addressLine3:param.customerAddressLine3,
+                    status: param.status,
+                    total: param.total,
+                    products: param.products
+                 });
+            });
         },
         (error: HttpErrorResponse) => {
             console.log(error.name + ' ' + error.message);
         });
     }
-    saveInvoice(){
-        this.invoice.products = this.selectedProductServices
-        this.invoice.companyId = this.selectedCompany.id
-        this.invoice.companyName = this.selectedCompany.companyName
-        this.invoice.companyAddressLine1 = this.selectedCompany.addressLine1
-        this.invoice.companyAddressLine2 = this.selectedCompany.addressLine2
-        this.invoice.companyAddressLine3 = this.selectedCompany.addressLine3
-        this.invoice.companyEmailAddress = this.selectedCompany.emailAddress
-        this.invoice.companyPhoneNumber = this.selectedCompany.phoneNumber
-        this.invoice.customerId = this.selectedCustomer.id
-        this.invoice.customerName = this.selectedCustomer.customerName
-        this.invoice.customerAddressLine1 = this.selectedCustomer.addressLine1
-        this.invoice.customerAddressLine2 = this.selectedCustomer.addressLine2
-        this.invoice.customerAddressLine3 = this.selectedCustomer.addressLine3
-        if(this.invoice.id==0){
-            this.invoiceService.addInvoice(this.invoice).subscribe((data: any) => {
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Created', life: 3000 });
-                this.router.navigateByUrl('/features/invoice-list');
-            },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            });
-        } else {
-            this.invoiceService.updateInvoice(this.invoice).subscribe((data: any) => {
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Updated', life: 3000 });
-                this.router.navigateByUrl('/features/invoice-list');
-            },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            });
-        }
-
-    }
 
     calculateTotal(i:number){
-        if(!this.selectedProductServices[i].quantity || isNaN(Number(this.selectedProductServices[i].quantity))) this.selectedProductServices[i].quantity =0;
-        if(!this.selectedProductServices[i].rate || isNaN(Number(this.selectedProductServices[i].rate))) this.selectedProductServices[i].rate =0;
-        this.selectedProductServices[i].total = this.selectedProductServices[i].quantity*this.selectedProductServices[i].rate;
-        this.selectedProductServices.forEach(e => {
-            this.invoice.total += e.total;
-        });
+        let subTotal = 0
+        this.products.valueChanges.subscribe(value => {
+            let t = value.quantity??0*value.rate??0
+            this.products.get('total')?.setValue(t)
+            subTotal += t
+         })
+        this.invoiceForm.get('total')?.setValue(subTotal);
 
     }
     EditCompany(){
@@ -149,6 +226,6 @@ export class InvoiceCreateComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
-    
+
 
 }

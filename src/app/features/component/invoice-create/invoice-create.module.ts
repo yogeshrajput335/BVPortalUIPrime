@@ -19,9 +19,11 @@ import { InvoiceCreateRoutingModule } from './invoice-create-routing.module';
 import {SpeedDialModule} from 'primeng/speeddial';
 import {SidebarModule} from 'primeng/sidebar';
 import {CalendarModule} from 'primeng/calendar';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         InvoiceCreateRoutingModule,
         TableModule,
         FileUploadModule,

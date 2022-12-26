@@ -1,170 +1,189 @@
 <p-toast></p-toast>
-<p-speedDial [model]="items" direction="right" [mask]="true"></p-speedDial>
+<!-- <p-speedDial [model]="items" direction="right" [mask]="true"></p-speedDial> -->
 <div class="book">
-    <div class="page">
-        <div class="subpage">
-            <div id="billFrom">
-                <div class="companyDetails">
-                    <span class="invoiceHeader">INVOICE</span><br/>
-                    <br/>
-                    <span>{{selectedCompany?.companyName??''}}</span><br/>
-                    <span>{{selectedCompany?.addressLine1??''}}</span><br/>
-                    <span>{{selectedCompany?.addressLine2??''}}</span><br/>
-                    <span>{{selectedCompany?.addressLine3??''}}</span><br/>
-                    <a (click)="displayCompanyPanel = true">Edit Company</a>
-                </div>
-                <div class="companyContactDetails">
-                    <span></span><br/><br/><br/>
-                    <span>{{selectedCompany?.emailAddress??''}}</span><br/>
-                    <span>{{selectedCompany?.phoneNumber??''}}</span><br/>
-                </div>
-                <div class="companyLogoDetails">
-                    <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
-                </div>
-            </div>
-            <br/>
-            <div id="billTo">
-                <div class ="customerDetails">
-                    <p-dropdown [options]="masterData.customer" [(ngModel)]="selectedCustomer" optionLabel="customerName"></p-dropdown>
-                </div>
-                <div class="selectedCustomerDetails">
-                    <div class="editCustomerDetails">
-                        <strong>Bill To</strong><br/>
-                        <span>{{selectedCustomer?.customerName??''}}</span><br/>
-                        <span>{{selectedCustomer?.addressLine1??''}}</span><br/>
-                        <span>{{selectedCustomer?.addressLine2??''}}</span><br/>
-                        <span>{{selectedCustomer?.addressLine3??''}}</span><br/>
-                        <a (click)="displayCustomerPanel = true" >Edit Customer</a>
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+        <div class="page">
+            <div class="subpage">
+                <div id="billFrom">
+                    <div class="companyDetails">
+                        <span class="invoiceHeader">INVOICE</span><br/>
+                        <!-- {{invoiceForm.value|json}} -->
+                        <br/>
+                        <span>{{invoiceForm.get('companyName')?.value}}</span><br/>
+                        <span>{{invoiceForm.get('companyAddressLine1')?.value}}</span><br/>
+                        <span>{{invoiceForm.get('companyAddressLine2')?.value}}</span><br/>
+                        <span>{{invoiceForm.get('companyAddressLine3')?.value}}</span><br/>
+                        <a (click)="displayCompanyPanel = true">Edit Company</a>
                     </div>
-                    <div class="invoiceNumber">
-                        <table>
+                    <div class="companyContactDetails">
+                        <span></span><br/><br/><br/>
+                        <span>{{invoiceForm.get('companyEmailAddress')?.value}}</span><br/>
+                        <span>{{invoiceForm.get('companyPhoneNumber')?.value}}</span><br/>
+                    </div>
+                    <div class="companyLogoDetails">
+                        <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
+                    </div>
+                </div>
+                <br/>
+                <div id="billTo">
+                    <div class ="customerDetails">
+                        <p-dropdown [options]="masterData.customer" formControlName="customerId" optionLabel="customerName" optionValue="id"></p-dropdown>
+                    </div>
+                    <div class="selectedCustomerDetails">
+                        <div class="editCustomerDetails">
+                            <strong>Bill To</strong><br/>
+                            <span>{{invoiceForm.get('customerName')?.value}}</span><br/>
+                            <span>{{invoiceForm.get('customerAddressLine1')?.value}}</span><br/>
+                            <span>{{invoiceForm.get('customerAddressLine2')?.value}}</span><br/>
+                            <span>{{invoiceForm.get('customerAddressLine3')?.value}}</span><br/>
+                            <a (click)="displayCustomerPanel = true" >Edit Customer</a>
+                        </div>
+                        <div class="invoiceNumber">
+                            <table>
+                                <tr>
+                                    <td>Invoice No.</td>
+                                    <td><input type="text" formControlName="invoiceNumber"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Terms</td>
+                                    <td><select formControlName="term">
+                                        <option value="15">Net 15</option>
+                                        <option value="30">Net 30</option>
+                                        <option value="45">Net 45</option>
+                                        <option value="60">Net 60</option>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td>Invoice Date</td>
+                                    <td>
+                                        <input type="date" id="invoiceDate" name="invoiceDate" formControlName="invoiceDate">
+                                        <!-- <p-calendar [(ngModel)]="invoice.invoiceDate"></p-calendar> -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Due Date</td>
+                                    <td>
+                                        <input type="date" id="dueDate" name="dueDate" formControlName="dueDate">
+                                        <!-- <p-calendar [(ngModel)]="invoice.dueDate"></p-calendar> -->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="tagDetails">
+                    <div class="hiddenTagDetails">
+                        <span class="tagsHidden">Tags (hidden)</span>
+                        <span class="manageTags"><a (click)="displayTagPanel = true">Manage Tags</a></span>
+                    </div>
+                    <input type="text" class="inputText"/>
+                </div>
+                <br/>
+
+
+
+                    <div style="width:100%;padding: 10px 30px 10px 30px;" id="productService">
+
+                        <div style="width:100%;display: flex;">
+                            <span style="width:80%">Product or service</span>
+                            <span style="width:30%;">Amount</span>
+                        </div>
+                        <hr/>
+                        <div formArrayName="products">
+                        <div style="width:100%;"  *ngFor="let product of products.controls; let i=index"  >
+                            <div style="width:100%;display: flex;"  [formGroupName]="i">
+                                <div style="width:5%">{{i+1}}.</div>
+                                <div style="width:25%">
+                                    {{productServices|json}}
+                                    <!-- <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
+                                    <select>
+                                        <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
+                                    </select> -->
+                                    <!-- <span class="p-float-label"> -->
+                                        <!-- <p-dropdown  placeholder="Product or service" class="p-inputtext-sm" inputId="dropdown" [autoDisplayFirst]="false" [options]="productServices" formControlName="itemTypeId" optionLabel="name" optionValue="itemTypeId"></p-dropdown> -->
+                                        <!-- <label for="dropdown">Product or service</label>
+                                    </span> -->
+                                    <!-- {{productServices|json}}
+                                    <select formControlName="itemTypeId">
+                                        <option *ngFor="let p of productServices" [value]="p.itemTypeId">{{p.name}}</option>
+                                    </select> -->
+                                    <select formControlName="itemTypeId">
+                                        <option value="">Choose</option>
+                                        <option *ngFor="let p of productServices" [value]="p.itemTypeId">
+                                            {{p.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div style="width:10%"><input formControlName="unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
+                                <div style="width:10%"><input formControlName="quantity" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
+                                <div style="width:5%">x</div>
+                                <div style="width:10%"><input formControlName="rate" (change)="calculateTotal(i)" type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
+                                <div style="width:5%">=</div>
+                                <div style="width:30%">{{invoiceForm.get('products')?.get('total')?.value | currency}}</div>
+                            </div>
+                            <br/>
+                            <div style="width:100%;display: flex;">
+                                <input formControlName="description" type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                                <a><i class="pi pi-trash" (click)="removeProduct(i);"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                        <hr/>
+                    <a (click)="addProducts()"><i class="pi pi-plus-circle" ></i> Add product or service</a>
+                    <hr/>
+
+                </div>
+                <br/>
+                <div class="paymentDetails" id="totalAndPayment">
+                    <div class="paymentOptions">
+                        <strong>Customer payment options <a>Edit</a></strong><br/>
+                        <select><option>BANK</option></select><br/>
+                        <textarea  class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
+                    </div>
+                    <div class="amountCalculation">
+                        <table style="width:100%">
                             <tr>
-                                <td>Invoice No.</td>
-                                <td><input type="text" [(ngModel)]="invoice.invoiceNumber"/></td>
+                                <td>Subtotal</td>
+                                <td style="text-align: right;">{{invoiceForm.get('total')?.value|currency}}</td>
                             </tr>
                             <tr>
-                                <td>Terms</td>
-                                <td><select [(ngModel)]="invoice.term">
-                                    <option value="15">Net 15</option>
-                                    <option value="30">Net 30</option>
-                                    <option value="45">Net 45</option>
-                                    <option value="60">Net 60</option>
-                                </select></td>
+                                <td>Sales tax</td>
+                                <td class="salesTax"><a>Set up</a></td>
                             </tr>
                             <tr>
-                                <td>Invoice Date</td>
-                                <td>
-                                    <p-calendar [(ngModel)]="invoice.invoiceDate"></p-calendar>
-                                </td>
+                                <td colspan="2"><hr/></td>
                             </tr>
                             <tr>
-                                <td>Due Date</td>
-                                <td>
-                                    <p-calendar [(ngModel)]="invoice.dueDate"></p-calendar>
+                                <td>Invoice Total</td>
+                                <td style="text-align: right;">{{invoiceForm.get('total')?.value|currency}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="editInvoice">
+                                    <button type="submit">Save</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-            </div>
-            <br/>
-            <div class="tagDetails">
-                <div class="hiddenTagDetails">
-                    <span class="tagsHidden">Tags (hidden)</span>
-                    <span class="manageTags"><a (click)="displayTagPanel = true">Manage Tags</a></span>
-                </div>
-                <input type="text" class="inputText"/>
-            </div>
-            <br/>
-
-
-
-                <div style="width:100%;padding: 10px 30px 10px 30px;" id="productService">
-
-                    <div style="width:100%;display: flex;">
-                        <span style="width:80%">Product or service</span>
-                        <span style="width:30%;">Amount</span>
+                <br/>
+                <div class="notes" id="notes">
+                    <div class="noteToCustomer">
+                        <strong>Note to customer</strong><br/>
+                        <textarea  class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
                     </div>
-                    <hr/>
-                    <div style="width:100%;" *ngFor="let item of selectedProductServices;let i= index"  >
-                        <div style="width:100%;display: flex;" >
-                            <div style="width:5%">{{i+1}}.</div>
-                            <div style="width:25%">
-                                <!-- <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
-                                <select>
-                                    <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
-                                </select> -->
-                                <span class="p-float-label">
-                                    <p-dropdown class="p-inputtext-sm" inputId="dropdown" [autoDisplayFirst]="false" [options]="productServices" [(ngModel)]="selectedProductServices[i]" optionLabel="name"></p-dropdown>
-                                    <label for="dropdown">Product or service</label>
-                                </span>
-
-                            </div>
-                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
-                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].quantity" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
-                            <div style="width:5%">x</div>
-                            <div style="width:10%"><input [(ngModel)]="selectedProductServices[i].rate" (change)="calculateTotal(i)" type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
-                            <div style="width:5%">=</div>
-                            <div style="width:30%">{{selectedProductServices[i].total | currency}}</div>
-                        </div>
-                        <br/>
-                        <div style="width:100%;display: flex;">
-                            <input [(ngModel)]="selectedProductServices[i].description" type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
-                            <a><i class="pi pi-trash" (click)="selectedProductServices.splice(i, 1);"></i></a>
-                        </div>
+                </div>
+                <br/>
+                <div class="attachments" id="attachments">
+                    <div class="attachmentFiles">
+                        <strong>Attachments</strong><br/>
+                        <input type="file" multiple />
                     </div>
-                    <hr/>
-                <a (click)="selectedProductServices.push({itemTypeId:null,unit:'',quantity:0,rate:0,total:0})"><i class="pi pi-plus-circle" ></i> Add product or service</a>
-                <hr/>
-
-            </div>
-            <br/>
-            <div class="paymentDetails" id="totalAndPayment">
-                <div class="paymentOptions">
-                    <strong>Customer payment options <a>Edit</a></strong><br/>
-                    <select><option>BANK</option></select><br/>
-                    <textarea  class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
-                </div>
-                <div class="amountCalculation">
-                    <table style="width:100%">
-                        <tr>
-                            <td>Subtotal</td>
-                            <td style="text-align: right;">{{invoice.total|currency}}</td>
-                        </tr>
-                        <tr>
-                            <td>Sales tax</td>
-                            <td class="salesTax"><a>Set up</a></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><hr/></td>
-                        </tr>
-                        <tr>
-                            <td>Invoice Total</td>
-                            <td style="text-align: right;">{{invoice.total|currency}}</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td class="editInvoice"><a>Edit Invoice</a></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <br/>
-            <div class="notes" id="notes">
-                <div class="noteToCustomer">
-                    <strong>Note to customer</strong><br/>
-                    <textarea  class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
-                </div>
-            </div>
-            <br/>
-            <div class="attachments" id="attachments">
-                <div class="attachmentFiles">
-                    <strong>Attachments</strong><br/>
-                    <input type="file" multiple />
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <p-sidebar [(visible)]="displayCustomerPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">

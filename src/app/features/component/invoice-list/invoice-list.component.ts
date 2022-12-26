@@ -117,7 +117,7 @@ export class InvoiceListComponent implements OnInit {
     saveProduct() {
         this.submitted = true;
 
-        if (this.invoice.clientName?.trim()) {
+        if (this.invoice.invoiceNumber && this.invoice.invoiceNumber <=0) {
             if (this.invoice.id) {
                 this.invoiceService.updateInvoice(this.invoice).subscribe((data: any) => {
                     this.loadInvoiceList();
@@ -137,6 +137,8 @@ export class InvoiceListComponent implements OnInit {
             }
             this.assettypeDialog = false;
             this.invoice = {};
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Warning', detail: 'Please enter valid invoice number', life: 3000 });
         }
     }
 

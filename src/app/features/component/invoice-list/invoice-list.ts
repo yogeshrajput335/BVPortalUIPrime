@@ -4,16 +4,23 @@
 // }
 export interface InvoiceList {
     id?: number;
-    invoiceNo?: number;
-    createdDate?: Date;
+    invoiceNumber?: number;
+    invoiceDate?: Date;
     term?: string;
-    termText?: string;
     dueDate?: Date;
-    clientId?:number;
-    clientName?:string;
-    fromLine1?: string;
-    fromLine2?: string;
-    fromLine3?: string;
+    companyId?:number;
+    companyName?:string;
+    companyAddressLine1?: string;
+    companyAddressLine2?: string;
+    companyAddressLine3?: string;
+    companyEmailAddress?: string;
+    companyPhoneNumber?: string;
+    customerId?:number;
+    customerName?:string;
+    customerAddressLine1?: string;
+    customerAddressLine2?: string;
+    customerAddressLine3?: string;
     status?: string;
+    total?:number;
     products?: any;
 }

@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../service/common.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CompanyService } from '../../service/company.service ';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { CustomerService } from '../../service/customer.service ';
 
 @Component({
@@ -72,6 +71,9 @@ export class InvoiceCreateComponent implements OnInit {
          }
          removeProduct(i:number) {
             this.invoice.products.splice(i, 1);
+            if(this.invoice.products==null || this.invoice.products.length==0){
+                this.addProducts();
+            }
             this.cd.detectChanges();
           }
 
@@ -125,16 +127,18 @@ export class InvoiceCreateComponent implements OnInit {
             this.invoice.companyEmailAddress = this.masterData.company[0].emailAddress;
             this.invoice.companyPhoneNumber = this.masterData.company[0].phoneNumber;
             this.invoice.customerId = this.masterData.customer[0].id;
-            this.invoice.customerName = this.masterData.customer[0].companyName;
+            this.invoice.customerName = this.masterData.customer[0].customerName;
             this.invoice.customerAddressLine1 = this.masterData.customer[0].addressLine1;
             this.invoice.customerAddressLine2 = this.masterData.customer[0].addressLine2;
             this.invoice.customerAddressLine3 = this.masterData.customer[0].addressLine3;
             this.invoice.term = this.masterData.customer[0].term;
+            this.addProducts()
             this.cd.detectChanges();
 
             this.globalDataService.getInvoice().subscribe((param: any) => {
                 if(param){
                     this.invoice = param;
+                    console.log(this.invoice)
                 }
                 this.cd.detectChanges();
             });

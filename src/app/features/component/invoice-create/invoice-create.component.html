@@ -90,7 +90,7 @@
                             <div style="width:100%;display: flex;"  >
                                 <div style="width:5%">{{i+1}}.</div>
                                 <div style="width:25%">
-                                    <p-dropdown [options]="productServices" optionLabel="name" styleClass="form-control" [(ngModel)]="invoice.products[i]" placeholder="Product or service"  (onChange)="onProductChange($event,i)">
+                                    <p-dropdown dataKey="itemTypeId" [options]="productServices" optionLabel="name" styleClass="form-control" [(ngModel)]="invoice.products[i]" placeholder="Product or service"  (onChange)="onProductChange($event,i)">
                                     </p-dropdown>
                                 </div>
                                 <div style="width:10%"><input [(ngModel)]="invoice.products[i].unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
@@ -116,7 +116,7 @@
                 <div class="paymentDetails" id="totalAndPayment">
                     <div class="paymentOptions">
                         <strong>Customer payment options <a>Edit</a></strong><br/>
-                        <select><option>BANK</option></select><br/>
+                        <select><option *ngFor="let p of masterData.paymentOption" [value]="p.id">{{p.paymentOptionName}}</option></select><br/>
                         <textarea [(ngModel)]="invoice.getPaidNotes" class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
                     </div>
                     <div class="amountCalculation">

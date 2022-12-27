@@ -124,7 +124,7 @@ export class CompanyComponent implements OnInit {
             if (this.company.id) {
                 this.companyService.updateCompany(this.company).subscribe((data: any) => {
                     this.loadCompanies();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Updated', life: 3000 });
+                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
                 },
                 (error: HttpErrorResponse) => {
                     console.log(error.name + ' ' + error.message);

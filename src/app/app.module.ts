@@ -22,6 +22,9 @@ import { CompanyService } from './features/service/company.service ';
 // import { CustomerService } from './demo/service/customer.service';
 import { ProductService } from './features/service/product.service';
 import { CustomerService } from './features/service/customer.service ';
+import { ServiceService } from './features/service/service.service';
+import { PaymentOptionService } from './features/service/payment-option.service ';
+import { AssetAllocationService } from './features/service/asset-allocation.service';
 
 export function tokenGetter() {
     return localStorage.getItem("token");
@@ -49,7 +52,7 @@ export function tokenGetter() {
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, AssetService,AssetTypeService,UserService,
         InvoiceService ,EmployeeService,CandidateService,CommonService,CompanyService,
-        ProductService,
+        ProductService,ServiceService,PaymentOptionService,AssetAllocationService,
         
     ],
     bootstrap: [AppComponent]

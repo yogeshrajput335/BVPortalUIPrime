@@ -1,24 +1,21 @@
 <p-toast></p-toast>
-<!-- <p-speedDial [model]="items" direction="right" [mask]="true"></p-speedDial> -->
 <div class="book">
-    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
         <div class="page">
             <div class="subpage">
                 <div id="billFrom">
                     <div class="companyDetails">
                         <span class="invoiceHeader">INVOICE</span><br/>
-                        <!-- {{invoiceForm.value|json}} -->
                         <br/>
-                        <span>{{invoiceForm.get('companyName')?.value}}</span><br/>
-                        <span>{{invoiceForm.get('companyAddressLine1')?.value}}</span><br/>
-                        <span>{{invoiceForm.get('companyAddressLine2')?.value}}</span><br/>
-                        <span>{{invoiceForm.get('companyAddressLine3')?.value}}</span><br/>
+                        <span>{{invoice.companyName}}</span><br/>
+                        <span>{{invoice.companyAddressLine1}}</span><br/>
+                        <span>{{invoice.companyAddressLine2}}</span><br/>
+                        <span>{{invoice.companyAddressLine3}}</span><br/>
                         <a (click)="displayCompanyPanel = true">Edit Company</a>
                     </div>
                     <div class="companyContactDetails">
                         <span></span><br/><br/><br/>
-                        <span>{{invoiceForm.get('companyEmailAddress')?.value}}</span><br/>
-                        <span>{{invoiceForm.get('companyPhoneNumber')?.value}}</span><br/>
+                        <span>{{invoice.companyEmailAddress}}</span><br/>
+                        <span>{{invoice.companyPhoneNumber}}</span><br/>
                     </div>
                     <div class="companyLogoDetails">
                         <img src="../../../../assets/blueverse_logo.png" alt="logo" width="80">
@@ -27,26 +24,26 @@
                 <br/>
                 <div id="billTo">
                     <div class ="customerDetails">
-                        <p-dropdown [options]="masterData.customer" formControlName="customerId" optionLabel="customerName" optionValue="id"></p-dropdown>
+                        <p-dropdown [options]="masterData.customer" [(ngModel)]="invoice.customerId" optionLabel="customerName" optionValue="id"></p-dropdown>
                     </div>
                     <div class="selectedCustomerDetails">
                         <div class="editCustomerDetails">
                             <strong>Bill To</strong><br/>
-                            <span>{{invoiceForm.get('customerName')?.value}}</span><br/>
-                            <span>{{invoiceForm.get('customerAddressLine1')?.value}}</span><br/>
-                            <span>{{invoiceForm.get('customerAddressLine2')?.value}}</span><br/>
-                            <span>{{invoiceForm.get('customerAddressLine3')?.value}}</span><br/>
+                            <span>{{invoice.customerName}}</span><br/>
+                            <span>{{invoice.customerAddressLine1}}</span><br/>
+                            <span>{{invoice.customerAddressLine2}}</span><br/>
+                            <span>{{invoice.customerAddressLine3}}</span><br/>
                             <a (click)="displayCustomerPanel = true" >Edit Customer</a>
                         </div>
                         <div class="invoiceNumber">
                             <table>
                                 <tr>
                                     <td>Invoice No.</td>
-                                    <td><input type="text" formControlName="invoiceNumber"/></td>
+                                    <td><input type="number" [(ngModel)]="invoice.invoiceNumber"/></td>
                                 </tr>
                                 <tr>
                                     <td>Terms</td>
-                                    <td><select formControlName="term">
+                                    <td><select [(ngModel)]="invoice.term" (change)="updateDueDate()">
                                         <option value="15">Net 15</option>
                                         <option value="30">Net 30</option>
                                         <option value="45">Net 45</option>
@@ -56,15 +53,13 @@
                                 <tr>
                                     <td>Invoice Date</td>
                                     <td>
-                                        <input type="date" id="invoiceDate" name="invoiceDate" formControlName="invoiceDate">
-                                        <!-- <p-calendar [(ngModel)]="invoice.invoiceDate"></p-calendar> -->
+                                        <p-calendar [(ngModel)]="invoice.invoiceDate" (ngModelChange)="updateDueDate()"></p-calendar>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Due Date</td>
                                     <td>
-                                        <input type="date" id="dueDate" name="dueDate" formControlName="dueDate">
-                                        <!-- <p-calendar [(ngModel)]="invoice.dueDate"></p-calendar> -->
+                                        <p-calendar [(ngModel)]="invoice.dueDate" ></p-calendar>
                                     </td>
                                 </tr>
                             </table>
@@ -90,24 +85,24 @@
                             <span style="width:30%;">Amount</span>
                         </div>
                         <hr/>
-                        <div formArrayName="products">
-                        <div style="width:100%;"  *ngFor="let product of products.controls; let i=index"  >
-                            <div style="width:100%;display: flex;"  [formGroupName]="i">
+                        <div>
+                        <div style="width:100%;"  *ngFor="let product of invoice.products; let i=index"  >
+                            <div style="width:100%;display: flex;"  >
                                 <div style="width:5%">{{i+1}}.</div>
                                 <div style="width:25%">
-                                    <p-dropdown [options]="productServices" optionLabel="name" styleClass="form-control" formControlName="itemTypeId" placeholder="Product or service" dataKey="itemTypeId" (onChange)="onProductChange($event,i)">
+                                    <p-dropdown [options]="productServices" optionLabel="name" styleClass="form-control" [(ngModel)]="invoice.products[i]" placeholder="Product or service"  (onChange)="onProductChange($event,i)">
                                     </p-dropdown>
                                 </div>
-                                <div style="width:10%"><input formControlName="unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
-                                <div style="width:10%"><input formControlName="quantity" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
+                                <div style="width:10%"><input [(ngModel)]="invoice.products[i].unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
+                                <div style="width:10%"><input [(ngModel)]="invoice.products[i].quantity" (change)="calculateTotal(i)"type="number" style="width:100%;border: none;" placeholder="Qty"/></div>
                                 <div style="width:5%">x</div>
-                                <div style="width:10%"><input formControlName="rate" (change)="calculateTotal(i)" type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
+                                <div style="width:10%"><input [(ngModel)]="invoice.products[i].rate" (change)="calculateTotal(i)" type="number" style="width:100%;border: none;" placeholder="Rate"/></div>
                                 <div style="width:5%">=</div>
-                                <div style="width:30%">{{products.get(['total', i])?.value | currency}}</div>
+                                <div style="width:30%">{{invoice.products[i].total| currency}}</div>
                             </div>
                             <br/>
                             <div style="width:100%;display: flex;">
-                                <input formControlName="description" type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
+                                <input [(ngModel)]="invoice.products[i].description" type="text" style="width:96%;border: none;" placeholder="Enter item description or details"/>
                                 <a><i class="pi pi-trash" (click)="removeProduct(i);"></i></a>
                             </div>
                         </div>
@@ -122,13 +117,13 @@
                     <div class="paymentOptions">
                         <strong>Customer payment options <a>Edit</a></strong><br/>
                         <select><option>BANK</option></select><br/>
-                        <textarea  class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
+                        <textarea [(ngModel)]="invoice.getPaidNotes" class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
                     </div>
                     <div class="amountCalculation">
                         <table style="width:100%">
                             <tr>
                                 <td>Subtotal</td>
-                                <td style="text-align: right;">{{invoiceForm.get('total')?.value|currency}}</td>
+                                <td style="text-align: right;">{{invoice.total|currency}}</td>
                             </tr>
                             <tr>
                                 <td>Sales tax</td>
@@ -139,12 +134,12 @@
                             </tr>
                             <tr>
                                 <td>Invoice Total</td>
-                                <td style="text-align: right;">{{invoiceForm.get('total')?.value|currency}}</td>
+                                <td style="text-align: right;">{{invoice.total|currency}}</td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td class="editInvoice">
-                                    <button type="submit">Save</button>
+                                    <button pButton type="button" (click)="onSave()">Save</button>
                                 </td>
                             </tr>
                         </table>
@@ -154,7 +149,7 @@
                 <div class="notes" id="notes">
                     <div class="noteToCustomer">
                         <strong>Note to customer</strong><br/>
-                        <textarea  class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
+                        <textarea [(ngModel)]="invoice.noteToCustomer" class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
                     </div>
                 </div>
                 <br/>
@@ -166,7 +161,6 @@
                 </div>
             </div>
         </div>
-    </form>
 </div>
 <p-sidebar [(visible)]="displayCustomerPanel"  [style]="{width:'30em'}" position="right">
     <ng-template pTemplate="header">
@@ -175,37 +169,26 @@
     <ng-template pTemplate="content">
         <div class="field">
             <label for="customerName">Customer Name</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.customerName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedCustomer.customerName}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedCustomer.customerName">Customer Name is required.</small>
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.customerName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !invoice.customerName}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !invoice.customerName">Customer Name is required.</small>
         </div>
         <div class="field">
             <label for="addressLine1">Address Line1</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine1" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.customerAddressLine1" autofocus />
         </div>
         <div class="field">
             <label for="addressLine2">Address Line2</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine2" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.customerAddressLine2" autofocus />
         </div>
         <div class="field">
             <label for="addressLine3">Address Line3</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.addressLine3" autofocus />
-        </div>
-        <div class="field">
-            <label for="emailAddress">Email Address</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.emailAddress" autofocus />
-        </div>
-        <div class="field">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.phoneNumber" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.customerAddressLine3" autofocus />
         </div>
         <div class="field">
             <label for="term">Term</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCustomer.term" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.term" autofocus />
         </div>
-        <div class="field">
-            <label for="status">Status</label>
-            <p-dropdown [options]="statuses" [(ngModel)]="selectedCustomer.status" optionLabel="label" optionValue="value"></p-dropdown>
-        </div>
+        <button pButton type="button" label="Save" (click)="EditCustomer()"></button>
     </ng-template>
 </p-sidebar>
 <p-sidebar [(visible)]="displayCompanyPanel"  [style]="{width:'30em'}" position="right">
@@ -215,36 +198,28 @@
     <ng-template pTemplate="content">
         <div class="field">
             <label for="companyName">Company Name</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.companyName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !selectedCompany.companyName}"/>
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !selectedCompany.companyName">Company Name is required.</small>
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !invoice.companyName}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !invoice.companyName">Company Name is required.</small>
         </div>
         <div class="field">
             <label for="addressLine1">Address Line1</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine1" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyAddressLine1" autofocus />
         </div>
         <div class="field">
             <label for="addressLine2">Address Line2</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine2" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyAddressLine2" autofocus />
         </div>
         <div class="field">
             <label for="addressLine3">Address Line3</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.addressLine3" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyAddressLine3" autofocus />
         </div>
         <div class="field">
             <label for="emailAddress">Email Address</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.emailAddress" autofocus />
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyEmailAddress" autofocus />
         </div>
         <div class="field">
             <label for="phoneNumber">Phone Number</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.phoneNumber" autofocus />
-        </div>
-        <div class="field">
-            <label for="companyLogo">Company Logo</label>
-            <input type="text" pInputText id="name" [(ngModel)]="selectedCompany.companyLogo" autofocus />
-        </div>
-        <div class="field">
-            <label for="status">Status</label>
-            <p-dropdown [options]="statuses" [(ngModel)]="selectedCompany.status" optionLabel="label" optionValue="value"></p-dropdown>
+            <input type="text" pInputText id="name" [(ngModel)]="invoice.companyPhoneNumber" autofocus />
         </div>
         <button pButton type="button" label="Save" (click)="EditCompany()"></button>
     </ng-template>

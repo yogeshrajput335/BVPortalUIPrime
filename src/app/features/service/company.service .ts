@@ -13,7 +13,7 @@ export class CompanyService {
     addCompany(company: Company) {
       return this.httpClient.post('Company/InsertCompany', company);
     }
-    updateCompany(company: Company) {
+    updateCompany(company: any) {
       return this.httpClient.put('Company/UpdateCompany', company);
     }
     deleteCompany(id?: number) {

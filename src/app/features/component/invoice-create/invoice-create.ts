@@ -22,5 +22,7 @@ export interface Invoice {
     customerAddressLine3?: string;
     status?: string;
     total?:number;
+    noteToCustomer?: string;
+    getPaidNotes?: string;
     products?: any;
 }

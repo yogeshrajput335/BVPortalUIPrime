@@ -13,7 +13,7 @@ export class CustomerService {
     addCustomer(customer: Customer) {
       return this.httpClient.post('Customer/InsertCustomer', customer);
     }
-    updateCustomer(customer: Customer) {
+    updateCustomer(customer: any) {
       return this.httpClient.put('Customer/UpdateCustomer', customer);
     }
     deleteCustomer(id?: number) {

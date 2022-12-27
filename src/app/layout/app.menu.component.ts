@@ -77,12 +77,12 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Service',
                                 icon: 'pi pi-fw pi-verified',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/service']
                             },
                             {
                                 label: 'Payment Option',
                                 icon: 'pi pi-fw pi-verified',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/payment-option']
                             },
                             {
                                 label: 'Invoice',
@@ -134,7 +134,7 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Asset Allocation',
                                 icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/features/asset-type']
+                                routerLink: ['/features/asset-allocation']
                             }
                         ]
                     },

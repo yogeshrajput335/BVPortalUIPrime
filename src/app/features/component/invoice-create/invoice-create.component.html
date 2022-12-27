@@ -95,32 +95,15 @@
                             <div style="width:100%;display: flex;"  [formGroupName]="i">
                                 <div style="width:5%">{{i+1}}.</div>
                                 <div style="width:25%">
-                                    {{productServices|json}}
-                                    <!-- <input type="text" style="width:100%;border: none;" placeholder="Product or service"/>
-                                    <select>
-                                        <option *ngFor="let p of productServices" [value]="p.id">{{p.name}}</option>
-                                    </select> -->
-                                    <!-- <span class="p-float-label"> -->
-                                        <!-- <p-dropdown  placeholder="Product or service" class="p-inputtext-sm" inputId="dropdown" [autoDisplayFirst]="false" [options]="productServices" formControlName="itemTypeId" optionLabel="name" optionValue="itemTypeId"></p-dropdown> -->
-                                        <!-- <label for="dropdown">Product or service</label>
-                                    </span> -->
-                                    <!-- {{productServices|json}}
-                                    <select formControlName="itemTypeId">
-                                        <option *ngFor="let p of productServices" [value]="p.itemTypeId">{{p.name}}</option>
-                                    </select> -->
-                                    <select formControlName="itemTypeId">
-                                        <option value="">Choose</option>
-                                        <option *ngFor="let p of productServices" [value]="p.itemTypeId">
-                                            {{p.name}}
-                                        </option>
-                                    </select>
+                                    <p-dropdown [options]="productServices" optionLabel="name" styleClass="form-control" formControlName="itemTypeId" placeholder="Product or service" dataKey="itemTypeId" (onChange)="onProductChange($event,i)">
+                                    </p-dropdown>
                                 </div>
                                 <div style="width:10%"><input formControlName="unit" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Unit"/></div>
                                 <div style="width:10%"><input formControlName="quantity" (change)="calculateTotal(i)"type="text" style="width:100%;border: none;" placeholder="Qty"/></div>
                                 <div style="width:5%">x</div>
                                 <div style="width:10%"><input formControlName="rate" (change)="calculateTotal(i)" type="text" style="width:100%;border: none;" placeholder="Rate"/></div>
                                 <div style="width:5%">=</div>
-                                <div style="width:30%">{{invoiceForm.get('products')?.get('total')?.value | currency}}</div>
+                                <div style="width:30%">{{products.get(['total', i])?.value | currency}}</div>
                             </div>
                             <br/>
                             <div style="width:100%;display: flex;">

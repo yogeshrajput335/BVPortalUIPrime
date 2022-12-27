@@ -35,7 +35,6 @@ export class InvoiceCreateComponent implements OnInit {
     selectedCustomer:any = {};
     selectedProductServices:any[] = [];
     productServices:any[] = []
-    counter = Array;
     grandTotal=0
     invoiceForm : FormGroup
 
@@ -65,15 +64,16 @@ export class InvoiceCreateComponent implements OnInit {
                 total: 0,
                 products: this.fb.array([{
                     id: 0,
-                    InvoiceId: 0,
-                    Product: '',
-                    Service: '',
+                    invoiceId: 0,
+                    product: '',
+                    service: '',
                     itemTypeId: '',
-                    Unit: '',
-                    Quantity: 0,
-                    Rate: 0,
-                    Total: 0,
-                    IsProduct: null,
+                    unit: '',
+                    quantity: 0,
+                    rate: 0,
+                    total: 0,
+                    isProduct: true,
+                    description:''
                 }]) ,
               });
         }
@@ -85,15 +85,16 @@ export class InvoiceCreateComponent implements OnInit {
         newProduct(): FormGroup {
         return this.fb.group({
             id: 0,
-            InvoiceId: 0,
-            Product: '',
-            Service: '',
+            invoiceId: 0,
+            product: '',
+            service: '',
             itemTypeId: '',
-            Unit: '',
-            Quantity: 0,
-            Rate: 0,
-            Total: 0,
-            IsProduct: null,
+            unit: '',
+            quantity: 0,
+            rate: 0,
+            total: 0,
+            isProduct: true,
+            description:''
         })
          }
          addProducts() {
@@ -165,15 +166,16 @@ export class InvoiceCreateComponent implements OnInit {
                 total: 0,
                 products: [{
                     id: 0,
-                    InvoiceId: 0,
-                    Product: '',
-                    Service: '',
+                    invoiceId: 0,
+                    product: '',
+                    service: '',
                     itemTypeId: '',
-                    Unit: '',
-                    Quantity: 0,
-                    Rate: 0,
-                    Total: 0,
-                    IsProduct: null,
+                    unit: '',
+                    quantity: 0,
+                    rate: 0,
+                    total: 0,
+                    isProduct: true,
+                    description:''
                 }]
              });
 
@@ -206,15 +208,26 @@ export class InvoiceCreateComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
+    onProductChange(event:any,i:any){
+        let data = this.productServices.filter(x=>x.itemTypeId==event.value.itemTypeId)
+        this.invoiceForm.value.products[i].unit = data[0].unit;
+        this.invoiceForm.value.products[i].rate = data[0].rate;
+        // this.products.get(['unit', i])?.setValue(data[0].unit)
+        // this.products.get(['rate', i])?.setValue(data[0].rate)
+        //this.products.get(['unit', i])?.setValue(data[0].unit)
+        this.calculateTotal(i)
+    }
 
     calculateTotal(i:number){
         let subTotal = 0
-        this.products.valueChanges.subscribe(value => {
-            let t = value.quantity??0*value.rate??0
-            this.products.get('total')?.setValue(t)
-            subTotal += t
-         })
-        this.invoiceForm.get('total')?.setValue(subTotal);
+        let t2 = this.invoiceForm.value.products[i].rate??0*this.invoiceForm.value.products[i].qunatity??0
+        this.invoiceForm.value.products[i].get('total')?.setValue(t2)
+        // this.products.valueChanges.subscribe(value => {
+        //     let t = value.quantity??0*value.rate??0
+        //     //this.products.get(['total', i])?.setValue(t)
+        //     subTotal += t
+        //  })
+        // this.invoiceForm.get('total')?.setValue(subTotal);
 
     }
     EditCompany(){

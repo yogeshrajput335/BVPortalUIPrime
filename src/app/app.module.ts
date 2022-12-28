@@ -26,6 +26,7 @@ import { ServiceService } from './features/service/service.service';
 import { PaymentOptionService } from './features/service/payment-option.service ';
 import { AssetAllocationService } from './features/service/asset-allocation.service';
 
+
 export function tokenGetter() {
     return localStorage.getItem("token");
 }
@@ -45,7 +46,8 @@ export function tokenGetter() {
             allowedDomains: ["localhost:7037"],
             disallowedRoutes: []
           }
-        })
+        }),
+
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
@@ -53,7 +55,7 @@ export function tokenGetter() {
         PhotoService, AssetService,AssetTypeService,UserService,
         InvoiceService ,EmployeeService,CandidateService,CommonService,CompanyService,
         ProductService,ServiceService,PaymentOptionService,AssetAllocationService,
-        
+
     ],
     bootstrap: [AppComponent]
 })

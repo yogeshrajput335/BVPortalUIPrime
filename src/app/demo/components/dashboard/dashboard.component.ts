@@ -10,6 +10,7 @@ import { GlobalDataService } from 'src/app/core/services/global-data.service';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
+
     items!: MenuItem[];
 
     products!: Product[];
@@ -28,6 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.globalDataService.setPageName("Dashboard");
+
         this.initChart();
         // this.productService.getProductsSmall().then(data => this.products = data);
 

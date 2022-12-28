@@ -24,4 +24,7 @@ export class InvoiceService {
     deleteInvoices(invoices: InvoiceList[]) {
       return this.httpClient.post('Invoice/DeleteInvoices',invoices);
     }
+    getNextInvoiceNumber(){
+        return this.httpClient.get('Invoice/GetNextInvoiceNumber');
+    }
 }

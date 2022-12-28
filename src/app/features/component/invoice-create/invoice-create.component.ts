@@ -99,6 +99,13 @@ export class InvoiceCreateComponent implements OnInit {
 
         }
     ngOnInit() {
+        this.invoiceService.getNextInvoiceNumber().subscribe((data: any) => {
+            this.invoice.invoiceNumber = (data??0)+1;
+        },
+        (error: HttpErrorResponse) => {
+            console.log(error.name + ' ' + error.message);
+        });
+        //GetNextInvoiceNumber
         this.statuses = [
             { label: 'ACTIVE', value: 'active' },
             { label: 'INACTIVE', value: 'inactive' }
@@ -138,7 +145,6 @@ export class InvoiceCreateComponent implements OnInit {
             this.globalDataService.getInvoice().subscribe((param: any) => {
                 if(param){
                     this.invoice = param;
-                    console.log(this.invoice)
                 }
                 this.cd.detectChanges();
             });

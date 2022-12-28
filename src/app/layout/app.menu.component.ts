@@ -26,7 +26,7 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     {
                         label: 'Employee Management',
-                        icon: 'pi pi-fw pi-align-justify',
+                        icon: 'pi pi-fw pi-users',
                         items: [
                             {
                                 label: 'User',
@@ -57,7 +57,7 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Invoicing',
-                        icon: 'pi pi-fw pi-align-justify',
+                        icon: 'pi pi-fw pi-wallet',
                         items: [
                             {
                                 label: 'Company',
@@ -93,7 +93,7 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Timesheet',
-                        icon: 'pi pi-fw pi-align-justify',
+                        icon: 'pi pi-fw pi-clock',
                         items: [
                             {
                                 label: 'Holiday',
@@ -119,7 +119,7 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Inventory',
-                        icon: 'pi pi-fw pi-align-justify',
+                        icon: 'pi pi-fw pi-server',
                         items: [
                             {
                                 label: 'Asset Type',

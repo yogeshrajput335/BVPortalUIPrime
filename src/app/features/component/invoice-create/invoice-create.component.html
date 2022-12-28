@@ -115,9 +115,9 @@
                 <br/>
                 <div class="paymentDetails" id="totalAndPayment">
                     <div class="paymentOptions">
-                        <strong>Customer payment options <a>Edit</a></strong><br/>
-                        <select><option *ngFor="let p of masterData.paymentOption" [value]="p.id">{{p.paymentOptionName}}</option></select><br/>
-                        <textarea [(ngModel)]="invoice.getPaidNotes" class="customerPayment" placeholder="Tell your customer how you want to get paid"></textarea>
+                        <strong>Customer payment options </strong><br/>
+                        <p-autoComplete [(ngModel)]="paymentOptionSelected" [multiple]="true" [suggestions]="paymentOptionResult" (completeMethod)="searchPaymentOption($event)" field="paymentOptionName"></p-autoComplete><br/>
+                        <textarea style="width:100%" [rows]="5" pInputTextarea [(ngModel)]="invoice.getPaidNotes"  placeholder="Tell your customer how you want to get paid"></textarea>
                     </div>
                     <div class="amountCalculation">
                         <table style="width:100%">
@@ -149,7 +149,7 @@
                 <div class="notes" id="notes">
                     <div class="noteToCustomer">
                         <strong>Note to customer</strong><br/>
-                        <textarea [(ngModel)]="invoice.noteToCustomer" class="tellNoteToCustomer" placeholder="Tell note to your customer"></textarea>
+                        <textarea style="width:100%" [rows]="5" pInputTextarea [(ngModel)]="invoice.noteToCustomer" placeholder="Tell note to your customer"></textarea>
                     </div>
                 </div>
                 <br/>

@@ -1,3 +1,4 @@
+import { PaymentOption } from './../payment-option/payment-option';
 import { Company } from './../company/company';
 import { GlobalDataService } from './../../../core/services/global-data.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -17,6 +18,9 @@ import { CustomerService } from '../../service/customer.service ';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoiceCreateComponent implements OnInit {
+
+    paymentOptionSelected = [];
+    paymentOptionResult=[];
 
     invoice: Invoice = {
         products :[]
@@ -105,7 +109,6 @@ export class InvoiceCreateComponent implements OnInit {
         (error: HttpErrorResponse) => {
             console.log(error.name + ' ' + error.message);
         });
-        //GetNextInvoiceNumber
         this.statuses = [
             { label: 'ACTIVE', value: 'active' },
             { label: 'INACTIVE', value: 'inactive' }
@@ -217,6 +220,12 @@ export class InvoiceCreateComponent implements OnInit {
     }
     addDays(theDate:any, days:number) {
         return new Date(theDate.getTime() + days*24*60*60*1000);
+    }
+    searchPaymentOption(event:any) {
+        this.paymentOptionResult= this.masterData.paymentOption.filter((x:any)=>x.paymentOptionName.includes(event.query))
+        // this.countrylookupservice.getResults(event.query).then(data => {
+        //     this.results = data;
+        // });
     }
 
 

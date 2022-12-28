@@ -20,6 +20,7 @@ import {SpeedDialModule} from 'primeng/speeddial';
 import {SidebarModule} from 'primeng/sidebar';
 import {CalendarModule} from 'primeng/calendar';
 import { ReactiveFormsModule } from '@angular/forms';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 @NgModule({
     imports: [
         CommonModule,
@@ -41,7 +42,8 @@ import { ReactiveFormsModule } from '@angular/forms';
         DialogModule,
         SpeedDialModule,
         SidebarModule,
-        CalendarModule
+        CalendarModule,
+        AutoCompleteModule
     ],
     declarations: [InvoiceCreateComponent]
 })

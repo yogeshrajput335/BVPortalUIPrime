@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
         { path: 'customer', loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule) },
         { path: 'product', loadChildren: () => import('./product/product.module').then(m => m.ProductModule) },
         { path: 'service', loadChildren: () => import('./service/service.module').then(m => m.ServiceModule) },
+        { path: 'holiday', loadChildren: () => import('./holiday/holiday.module').then(m => m.HolidayModule) },
+        { path: 'leave-type', loadChildren: () => import('./leave-type/leave-type.module').then(m => m.LeaveTypeModule) },
         { path: 'payment-option', loadChildren: () => import('./payment-option/payment-option.module').then(m => m.PaymentOptionModule) },
         { path: 'invoice-list', loadChildren: () => import('./invoice-list/invoice-list.module').then(m => m.InvoiceListModule) },
         { path: 'invoice-create', loadChildren: () => import('./invoice-create/invoice-create.module').then(m => m.InvoiceCreateModule) },

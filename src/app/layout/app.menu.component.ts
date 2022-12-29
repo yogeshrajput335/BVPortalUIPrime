@@ -98,12 +98,12 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Holiday',
                                 icon: 'pi pi-fw pi-image',
-                                routerLink: ['/auth/login']
+                                routerLink: ['/features/holiday']
                             },
                             {
                                 label: 'Leave Type',
                                 icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                routerLink: ['/features/leave-type']
                             },
                             {
                                 label: 'Leave',

@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpCommonService } from 'src/app/core/services/httpCommon.service';
+import { API_CONST } from 'src/app/core/constants';
+import { HttpCommonService } from '@coreservices/httpCommon.service';
 import { Asset } from '../component/asset/asset';
 
 @Injectable()
@@ -9,21 +10,21 @@ export class AssetService {
     constructor(private httpClient: HttpCommonService) { }
 
     getAllAsset() {
-        return this.httpClient.get('Asset/GetAsset');
+        return this.httpClient.get(API_CONST.GET_ASSET);
     }
     getAllAssetTypes() {
-      return this.httpClient.get('AssetType/GetAssetType');
+      return this.httpClient.get(API_CONST.GET_ASSETTYPE);
     }
     addAsset(asset: Asset) {
-      return this.httpClient.post('Asset/InsertAsset', asset);
+      return this.httpClient.post(API_CONST.POST_ASSET, asset);
     }
     updateAsset(asset: Asset) {
-      return this.httpClient.put('Asset/UpdateAsset', asset);
+      return this.httpClient.put(API_CONST.PUT_ASSET, asset);
     }
-    deleteAsset(id?: number) {
-      return this.httpClient.delete('Asset/DeleteAsset/' + id);
+    deleteAsset(id: number) {
+      return this.httpClient.delete(API_CONST.DELETE_ASSET.replace(':id', id?.toString()));
     }
     deleteAssets(assets: Asset[]) {
-      return this.httpClient.post('Asset/DeleteAssets',assets);
+      return this.httpClient.post(API_CONST.DELETE_ASSETS,assets);
     }
 }

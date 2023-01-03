@@ -1,17 +1,20 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AssetService } from '../../service/asset.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Asset } from './asset';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './asset.component.html',
     providers: [MessageService]
 })
-export class AssetComponent implements OnInit {
+export class AssetComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
 
     assets: Asset[] = [];
 
@@ -57,20 +60,24 @@ export class AssetComponent implements OnInit {
     }
 
     loadAssets(){
-        this.assetService.getAllAsset().subscribe((data: any) => {
-            this.assets = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetService.getAllAsset().subscribe((data: any) => {
+                this.assets = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+        );
     }
     loadAssetTypes(){
-        this.assetService.getAllAssetTypes().subscribe((data: any) => {
-            this.assetTypes = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetService.getAllAssetTypes().subscribe((data: any) => {
+                this.assetTypes = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+        );
     }
 
     openNew() {
@@ -95,26 +102,30 @@ export class AssetComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.assetService.deleteAssets(this.selectedAssets).subscribe((data: any) => {
-            this.loadAssets();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
-            this.selectedAssets = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetService.deleteAssets(this.selectedAssets).subscribe((data: any) => {
+                this.loadAssets();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
+                this.selectedAssets = [];
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+        );
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.assetService.deleteAsset(this.asset.id).subscribe((data: any) => {
-            this.loadAssets();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
-            this.asset = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetService.deleteAsset(this.asset.id??0).subscribe((data: any) => {
+                this.loadAssets();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
+                this.asset = {};
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+        );
 
 
     }
@@ -129,21 +140,25 @@ export class AssetComponent implements OnInit {
 
         if (this.asset.name?.trim()) {
             if (this.asset.id) {
-                this.assetService.updateAsset(this.asset).subscribe((data: any) => {
-                    this.loadAssets();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assetService.updateAsset(this.asset).subscribe((data: any) => {
+                        this.loadAssets();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                );
             } else {
-                this.assetService.addAsset(this.asset).subscribe((data: any) => {
-                    this.loadAssets();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assetService.addAsset(this.asset).subscribe((data: any) => {
+                        this.loadAssets();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                );
             }
             this.assetDialog = false;
             this.asset = {};
@@ -153,4 +168,7 @@ export class AssetComponent implements OnInit {
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+      }
 }

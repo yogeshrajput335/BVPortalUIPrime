@@ -46,3 +46,8 @@ https://github.com/umutesen/angular-material-template
 
 ## JWT AUTHENTICATION
 * https://code-maze.com/authentication-aspnetcore-jwt-2/
+
+## NPM CHECK
+* Run npm outdated command or add npm-check once a month to keep your dependencies updated. It will definitely help you keep track of changes. It’s much easier to update Angular 5 to 6 than 4 to 6.
+* npm install -g npm-check
+* Run npm audit command once a month to check if any of the libraries has any vulnerabilities. It will help you keep your app secure. 

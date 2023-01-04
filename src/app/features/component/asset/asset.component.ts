@@ -69,6 +69,7 @@ export class AssetComponent implements OnInit, OnDestroy {
             })
         );
     }
+    
     loadAssetTypes(){
         this.subscriptions.add(
             this.assetService.getAllAssetTypes().subscribe((data: any) => {

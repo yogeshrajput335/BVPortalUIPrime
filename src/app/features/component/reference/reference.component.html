@@ -6,7 +6,7 @@
                 <ng-template pTemplate="left">
                     <div class="my-2">
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEmployees()" [disabled]="!selectedEmployees || !selectedEmployees.length"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedReferences()" [disabled]="!selectedReferences || !selectedReferences.length"></button>
                     </div>
                 </ng-template>
 
@@ -16,10 +16,10 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt styleClass="p-datatable-sm" [value]="employees" [columns]="cols" responsiveLayout="scroll" styleClass="p-datatable-sm" [rows]="10" [globalFilterFields]="['firstName','lastName','email','phoneNumber','employeeType','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedEmployees" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="references" [columns]="cols" responsiveLayout="scroll"  styleClass="p-datatable-sm" [rows]="10" [globalFilterFields]="['firstName','lastName','phoneNumber','email','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedReferences" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Manage Employees</h5>
+                        <h5 class="m-0">Manage References</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
@@ -33,45 +33,40 @@
                         </th>
                         <th pSortableColumn="firstName">First Name<p-sortIcon field="firstName"></p-sortIcon></th>
                         <th pSortableColumn="lastName">Last Name<p-sortIcon field="lastName"></p-sortIcon></th>
-                        <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
                         <th pSortableColumn="phoneNumber">Phone Number<p-sortIcon field="phoneNumber"></p-sortIcon></th>
-                        <th pSortableColumn="employeeType">Employee Type <p-sortIcon field="employeeType"></p-sortIcon></th>
+                        <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
                         <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-employee>
+                <ng-template pTemplate="body" let-reference>
                     <tr>
                         <td>
-                            <p-tableCheckbox [value]="employee"></p-tableCheckbox>
+                            <p-tableCheckbox [value]="reference"></p-tableCheckbox>
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">First Name</span>
-                            {{employee.firstName}}
+                            {{reference.firstName}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Last Name</span>
-                            {{employee.lastName}}
-                        </td>
-                        <td style="width:20%; min-width:10rem;">
-                            <span class="p-column-title">Email</span>
-                            {{employee.email}}
+                            {{reference.lastName}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
                             <span class="p-column-title">Phone Number</span>
-                            {{employee.phoneNumber}}
+                            {{reference.phoneNumber}}
                         </td>
                         <td style="width:20%; min-width:10rem;">
-                            <span class="p-column-title">Employee Type</span>
-                            {{employee.employeeType}}
+                            <span class="p-column-title">Email</span>
+                            {{reference.email}}
                         </td>
                         <td style="width:20%; min-width: 10rem;"><span class="p-column-title">Status</span>
-                            <span [class]="'product-badge status-' + (employee.status ? employee.status.toLowerCase() : '')">{{employee.status}}</span>
+                            <span [class]="'product-badge status-' + (reference.status ? reference.status.toLowerCase() : '')">{{reference.status}}</span>
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEmployee(employee)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteEmployee(employee)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editReference(reference)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteReference(reference)"></button>
                             </div>
                         </td>
                     </tr>
@@ -79,60 +74,55 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="employeeDialog" [style]="{width: '450px'}" header="Employee Details" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="referenceDialog" [style]="{width: '450px'}" header="reference Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
                     <label for="firstName">First Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="employee.firstName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.firstName}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.firstName">First Name is required.</small>
+                    <input type="text" pInputText id="name" [(ngModel)]="reference.firstName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !reference.firstName}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !reference.firstName">First Name is required.</small>
                 </div>
                 <div class="field">
                     <label for="lastName">Last Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="employee.lastName" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !employee.lastName}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !employee.lastName">Last Name is required.</small>
-                </div>
-                <div class="field">
-                    <label for="email">Email </label>
-                    <input type="text" pInputText id="name" [(ngModel)]="employee.email" autofocus />
+                    <input type="text" pInputText id="name" [(ngModel)]="reference.lastName" autofocus />
                 </div>
                 <div class="field">
                     <label for="phoneNumber">Phone Number</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="employee.phoneNumber" autofocus />
+                    <input type="text" pInputText id="name" [(ngModel)]="reference.phoneNumber" autofocus />
                 </div>
                 <div class="field">
-                    <label for="name">Employee Type</label>
-                    <p-dropdown [options]="employeeTypes" [(ngModel)]="employee.employeeType" optionLabel="label" optionValue="value"></p-dropdown>
+                    <label for="email">Email</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="reference.email" autofocus />
                 </div>
                 <div class="field">
                     <label for="status">Status</label>
-                    <p-dropdown [options]="statuses" [(ngModel)]="employee.status" optionLabel="label" optionValue="value"></p-dropdown>
+                    <p-dropdown [options]="statuses" [(ngModel)]="reference.status" optionLabel="label" optionValue="value"></p-dropdown>
                 </div>
             </ng-template>
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmployee()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveReference()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteEmployeeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteReferenceDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="employee">Are you sure you want to delete <b>{{employee.firstName}}</b>?</span>
+                <span *ngIf="reference">Are you sure you want to delete <b>{{reference.firstName}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteEmployeeDialog = false"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteReferenceDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteEmployeesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteReferencesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected Employees?</span>
+                <span>Are you sure you want to delete selected References?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteEmployeesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteReferencesDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
             </ng-template>
         </p-dialog>

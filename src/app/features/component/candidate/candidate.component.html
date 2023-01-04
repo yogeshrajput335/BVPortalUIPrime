@@ -21,7 +21,7 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="candidates" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+            <p-table #dt [value]="candidates" [columns]="cols" responsiveLayout="scroll" styleClass="p-datatable-sm" [rows]="10"
                 [globalFilterFields]="['createdDate','name', 'technology', 'visa', 'rate','client','clientContact','clientMail','vendor','vendorContact','vendorMail','status']"
                 [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"

@@ -64,6 +64,7 @@ export class AssetComponent implements OnInit {
             console.log(error.name + ' ' + error.message);
         });
     }
+    
     loadAssetTypes(){
         this.assetService.getAllAssetTypes().subscribe((data: any) => {
             this.assetTypes = data;

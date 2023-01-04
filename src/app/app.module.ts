@@ -27,6 +27,9 @@ import { PaymentOptionService } from './features/service/payment-option.service 
 import { AssetAllocationService } from './features/service/asset-allocation.service';
 import { HolidayService } from './features/service/holiday.service ';
 import { LeaveTypeService } from './features/service/leave-type.service';
+import { LeaveService } from './features/service/leave.service';
+import { JobService } from './features/service/job.service';
+import { ReferenceService } from './features/service/reference.service';
 
 
 export function tokenGetter() {
@@ -57,7 +60,7 @@ export function tokenGetter() {
         PhotoService, AssetService,AssetTypeService,UserService,
         InvoiceService ,EmployeeService,CandidateService,CommonService,CompanyService,
         ProductService,ServiceService,PaymentOptionService,AssetAllocationService,HolidayService,
-        LeaveTypeService,
+        LeaveTypeService,LeaveService,JobService,ReferenceService,
 
     ],
     bootstrap: [AppComponent]

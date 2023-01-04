@@ -41,12 +41,12 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Jobs',
                                 icon: 'pi pi-fw pi-briefcase',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/job']
                             },
                             {
                                 label: 'Reference',
                                 icon: 'pi pi-fw pi-bookmark',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/reference']
                             },
                             {
                                 label: 'Candidate',
@@ -108,7 +108,7 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Leave',
                                 icon: 'pi pi-fw pi-home',
-                                routerLink: ['/auth/access']
+                                routerLink: ['/features/leave']
                             },
                             {
                                 label: 'Timesheet',

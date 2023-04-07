@@ -20,6 +20,6 @@ export class CustomerService {
       return this.httpClient.delete('Customer/DeleteCustomer/' + id);
     }
     deleteCustomers(customers: Customer[]) {
-      return this.httpClient.post('Customer/DeleteCustomer',customers);
+      return this.httpClient.post('Customer/DeleteCustomers',customers);
     }
 }

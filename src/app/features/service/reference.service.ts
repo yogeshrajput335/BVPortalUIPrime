@@ -20,6 +20,6 @@ export class ReferenceService {
       return this.httpClient.delete('ReferList/DeleteReferList/' + id);
     }
     deleteReferences(references: Reference[]) {
-      return this.httpClient.post('ReferList/DeleteReferList',references);
+      return this.httpClient.post('ReferList/DeleteReferLists',references);
     }
 }

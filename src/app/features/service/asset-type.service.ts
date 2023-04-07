@@ -24,6 +24,6 @@ export class AssetTypeService {
       return this.httpClient.delete('AssetType/DeleteAssetType/' + id);
     }
     deleteAssetTypes(assettypes: AssetType[]) {
-      return this.httpClient.post('AssetType/DeleteAssetTyp',assettypes);
+      return this.httpClient.post('AssetType/DeleteAssetTypes',assettypes);
     }
 }

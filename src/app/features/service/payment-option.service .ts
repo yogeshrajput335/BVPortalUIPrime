@@ -20,6 +20,6 @@ export class PaymentOptionService {
       return this.httpClient.delete('PaymentOption/DeletePaymentOption/' + id);
     }
     deletePaymentOptions(paymentOptions: PaymentOption[]) {
-      return this.httpClient.post('PaymentOption/DeletePaymentOption',paymentOptions);
+      return this.httpClient.post('PaymentOption/DeletePaymentOptions',paymentOptions);
     }
 }

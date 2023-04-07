@@ -20,6 +20,6 @@ export class CandidateService {
       return this.httpClient.delete('Candidate/DeleteCandidate/' + id);
     }
     deleteCandidates(candidates: Candidate[]) {
-      return this.httpClient.post('Candidate/DeleteCandidate',candidates);
+      return this.httpClient.post('Candidate/DeleteCandidates',candidates);
     }
 }

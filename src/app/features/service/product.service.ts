@@ -20,7 +20,7 @@ export class ProductService {
       return this.httpClient.delete('Product/DeleteProduct/' + id);
     }
     deleteProducts(products: Product[]) {
-      return this.httpClient.post('Product/DeleteProduct',products);
+      return this.httpClient.post('Product/DeleteProducts',products);
     }
 
     

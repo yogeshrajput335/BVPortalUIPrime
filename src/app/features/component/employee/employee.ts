@@ -7,7 +7,7 @@ export interface Employee {
     firstName?: string;
     lastName?: string;
     email?: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
     employeeType?: string;
     employeeTypeId?: number;
     status?: string;

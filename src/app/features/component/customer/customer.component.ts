@@ -1,16 +1,19 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Customer } from './customer';
 import { CustomerService } from '../../service/customer.service ';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './customer.component.html',
     providers: [MessageService]
 })
-export class CustomerComponent implements OnInit {
+export class CustomerComponent implements OnInit, OnDestroy  {
+
+    subscriptions = new Subscription();
     
     customer: Customer = {};
 
@@ -57,14 +60,17 @@ export class CustomerComponent implements OnInit {
         ];
 
     }
-    loadCustomers(){
-        this.customerService.getAllCustomers().subscribe((data: any) => {
-            this.customers = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+
+        loadCustomers(){
+            this.subscriptions.add(
+            this.customerService.getAllCustomers().subscribe((data: any) => {
+                this.customers = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
     
     openNew() {
         this.customer = {};
@@ -86,64 +92,75 @@ export class CustomerComponent implements OnInit {
         this.customer = { ...customer };
     }
 
-    confirmDeleteSelected() {
-        this.deleteCustomersDialog = false;
-        this.customerService.deleteCustomers(this.selectedCustomers).subscribe((data: any) => {
-            this.loadCustomers();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customers Deleted', life: 3000 });
-            this.selectedCustomers = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+        confirmDeleteSelected() {
+            this.deleteCustomersDialog = false;
+            this.subscriptions.add(
+            this.customerService.deleteCustomers(this.selectedCustomers).subscribe((data: any) => {
+                this.loadCustomers();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customers Deleted', life: 3000 });
+                this.selectedCustomers = [];
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
 
-    confirmDelete() {
-        this.deleteCustomerDialog = false;
-        this.customerService.deleteCustomer(this.customer.id).subscribe((data: any) => {
-            this.loadCustomers();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Deleted', life: 3000 });
-            this.customer = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        confirmDelete() {
+            this.deleteCustomerDialog = false;
+            this.subscriptions.add(
+            this.customerService.deleteCustomer(this.customer.id).subscribe((data: any) => {
+                this.loadCustomers();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Deleted', life: 3000 });
+                this.customer = {};
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
 
 
-    }
+        }
 
     hideDialog() {
         this.customerDialog = false;
         this.submitted = false;
     }
 
-    saveCustomer() {
-        this.submitted = true;
+        saveCustomer() {
+            this.submitted = true;
 
-        if (this.customer.customerName?.trim()) {
-            if (this.customer.id) {
-                this.customerService.updateCustomer(this.customer).subscribe((data: any) => {
-                    this.loadCustomers();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
-            } else {
-                this.customerService.addCustomer(this.customer).subscribe((data: any) => {
-                    this.loadCustomers();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+            if (this.customer.customerName?.trim()) {
+                if (this.customer.id) {
+                    this.subscriptions.add(
+                    this.customerService.updateCustomer(this.customer).subscribe((data: any) => {
+                        this.loadCustomers();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Updated', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                } else {
+                    this.subscriptions.add(
+                    this.customerService.addCustomer(this.customer).subscribe((data: any) => {
+                        this.loadCustomers();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Customer Created', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                }
+                this.customerDialog = false;
+                this.customer = {};
             }
-            this.customerDialog = false;
-            this.customer = {};
         }
-    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+      }
 }

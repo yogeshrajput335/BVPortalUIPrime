@@ -1,5 +1,5 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -7,12 +7,15 @@ import { AssetService } from '../../service/asset.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Candidate } from './candidate';
 import { CandidateService } from '../../service/candidate.service ';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './candidate.component.html',
     providers: [MessageService]
 })
-export class CandidateComponent implements OnInit {
+export class CandidateComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
 
     candidate: Candidate = {};
 
@@ -63,13 +66,15 @@ export class CandidateComponent implements OnInit {
         ];
     }
 
-    loadCandidates(){
-        this.candidateService.getAllCandidates().subscribe((data: any) => {
-            this.candidates = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadCandidates() {
+        this.subscriptions.add(
+            this.candidateService.getAllCandidates().subscribe((data: any) => {
+                this.candidates = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     openNew() {
@@ -94,26 +99,30 @@ export class CandidateComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteCandidatesDialog = false;
-        this.candidateService.deleteCandidates(this.selectedCandidates).subscribe((data: any) => {
-            this.loadCandidates();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidates Deleted', life: 3000 });
-            this.selectedCandidates = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.candidateService.deleteCandidates(this.selectedCandidates).subscribe((data: any) => {
+                this.loadCandidates();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidates Deleted', life: 3000 });
+                this.selectedCandidates = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteCandidateDialog = false;
-        this.candidateService.deleteCandidate(this.candidate.id).subscribe((data: any) => {
-            this.loadCandidates();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Deleted', life: 3000 });
-            this.candidate = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.candidateService.deleteCandidate(this.candidate.id).subscribe((data: any) => {
+                this.loadCandidates();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Deleted', life: 3000 });
+                this.candidate = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     hideDialog() {
@@ -126,21 +135,25 @@ export class CandidateComponent implements OnInit {
 
         if (this.candidate.firstName?.trim() && this.candidate.lastName?.trim()) {
             if (this.candidate.id) {
-                this.candidateService.updateCandidate(this.candidate).subscribe((data: any) => {
-                    this.loadCandidates();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.candidateService.updateCandidate(this.candidate).subscribe((data: any) => {
+                        this.loadCandidates();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.candidateService.addCandidate(this.candidate).subscribe((data: any) => {
-                    this.loadCandidates();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.candidateService.addCandidate(this.candidate).subscribe((data: any) => {
+                        this.loadCandidates();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Candidate Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.candidateDialog = false;
             this.candidate = {};
@@ -149,5 +162,8 @@ export class CandidateComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

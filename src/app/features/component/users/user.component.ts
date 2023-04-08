@@ -1,20 +1,23 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { User } from './user';
 import { UserService } from '../../service/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './user.component.html',
     providers: [MessageService]
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
 
     users: User[] = [];
 
-    user: User ={};
+    user: User = {};
 
     userTypes: any[] = [];
 
@@ -65,21 +68,25 @@ export class UserComponent implements OnInit {
         ];
     }
 
-    loadUsers(){
-        this.userService.getAllUser().subscribe((data: any) => {
-            this.users = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadUsers() {
+        this.subscriptions.add(
+            this.userService.getAllUser().subscribe((data: any) => {
+                this.users = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
-    loadEmployees(){
-        this.userService.getAllEmployeeForDropdown().subscribe((data: any) => {
-            this.employees = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadEmployees() {
+        this.subscriptions.add(
+            this.userService.getAllEmployeeForDropdown().subscribe((data: any) => {
+                this.employees = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     openNew() {
@@ -104,26 +111,30 @@ export class UserComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteUsersDialog = false;
-        this.userService.deleteUsers(this.selectedUsers).subscribe((data: any) => {
-            this.loadUsers();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Users Deleted', life: 3000 });
-            this.selectedUsers = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.userService.deleteUsers(this.selectedUsers).subscribe((data: any) => {
+                this.loadUsers();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Users Deleted', life: 3000 });
+                this.selectedUsers = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteUserDialog = false;
-        this.userService.deleteUser(this.user.id).subscribe((data: any) => {
-            this.loadUsers();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
-            this.user = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.userService.deleteUser(this.user.id).subscribe((data: any) => {
+                this.loadUsers();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+                this.user = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -138,21 +149,25 @@ export class UserComponent implements OnInit {
 
         if (this.user.username?.trim()) {
             if (this.user.id) {
-                this.userService.updateUser(this.user).subscribe((data: any) => {
-                    this.loadUsers();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.userService.updateUser(this.user).subscribe((data: any) => {
+                        this.loadUsers();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.userService.addUser(this.user).subscribe((data: any) => {
-                    this.loadUsers();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.userService.addUser(this.user).subscribe((data: any) => {
+                        this.loadUsers();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.userDialog = false;
             this.user = {};
@@ -161,5 +176,8 @@ export class UserComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

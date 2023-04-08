@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './asset-type.component.html',
     providers: [MessageService]
 })
-export class AssetTypeComponent implements OnInit , OnDestroy {
+export class AssetTypeComponent implements OnInit, OnDestroy {
 
     subscriptions = new Subscription();
     // assets: AssetType[] = [];
@@ -41,14 +41,12 @@ export class AssetTypeComponent implements OnInit , OnDestroy {
 
     rowsPerPageOptions = [5, 10, 20];
 
-
     constructor(private messageService: MessageService,
         private assettypeService: AssetTypeService, private globalDataService: GlobalDataService) { }
 
     ngOnInit() {
         this.globalDataService.setPageName("AssetTypes");
         this.loadAssetTypes();
-        // this.loadAssets();
 
         this.cols = [
             { field: 'name', header: 'Name' },
@@ -62,22 +60,14 @@ export class AssetTypeComponent implements OnInit , OnDestroy {
         ];
     }
 
-    // loadAssets(){
-    //     this.assettypeService.getAllAsset().subscribe((data: any) => {
-    //         this.assets = data;
-    //     },
-    //     (error: HttpErrorResponse) => {
-    //         console.log(error.name + ' ' + error.message);
-    //     });
-    // }
-    loadAssetTypes(){
+    loadAssetTypes() {
         this.subscriptions.add(
             this.assettypeService.getAllAssetTypes().subscribe((data: any) => {
                 this.assetTypes = data;
             },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            })
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
         );
     }
 
@@ -103,26 +93,30 @@ export class AssetTypeComponent implements OnInit , OnDestroy {
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.assettypeService.deleteAssetTypes(this.selectedAssetTypes).subscribe((data: any) => {
-            this.loadAssetTypes();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
-            this.selectedAssetTypes = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assettypeService.deleteAssetTypes(this.selectedAssetTypes).subscribe((data: any) => {
+                this.loadAssetTypes();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
+                this.selectedAssetTypes = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.assettypeService.deleteAssetType(this.assettype.id).subscribe((data: any) => {
-            this.loadAssetTypes();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
-            this.assettype = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assettypeService.deleteAssetType(this.assettype.id).subscribe((data: any) => {
+                this.loadAssetTypes();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
+                this.assettype = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -137,21 +131,25 @@ export class AssetTypeComponent implements OnInit , OnDestroy {
 
         if (this.assettype.name?.trim()) {
             if (this.assettype.id) {
-                this.assettypeService.updateAssetType(this.assettype).subscribe((data: any) => {
-                    this.loadAssetTypes();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assettypeService.updateAssetType(this.assettype).subscribe((data: any) => {
+                        this.loadAssetTypes();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.assettypeService.addAssetType(this.assettype).subscribe((data: any) => {
-                    this.loadAssetTypes();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assettypeService.addAssetType(this.assettype).subscribe((data: any) => {
+                        this.loadAssetTypes();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.assettypeDialog = false;
             this.assettype = {};
@@ -163,5 +161,5 @@ export class AssetTypeComponent implements OnInit , OnDestroy {
     }
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
-      }
+    }
 }

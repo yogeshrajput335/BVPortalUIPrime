@@ -1,17 +1,20 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Product } from './product';
 import { ProductService } from '../../service/product.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './product.component.html',
     providers: [MessageService]
 })
-export class ProductComponent implements OnInit {
-    
+export class ProductComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
+
     product: Product = {};
 
     products: Product[] = [];
@@ -53,15 +56,17 @@ export class ProductComponent implements OnInit {
         ];
 
     }
-    loadProducts(){
-        this.productService.getAllProducts().subscribe((data: any) => {
-            this.products = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadProducts() {
+        this.subscriptions.add(
+            this.productService.getAllProducts().subscribe((data: any) => {
+                this.products = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
-    
+
     openNew() {
         this.product = {};
         this.submitted = false;
@@ -84,26 +89,30 @@ export class ProductComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.productService.deleteProducts(this.selectedProducts).subscribe((data: any) => {
-            this.loadProducts();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-            this.selectedProducts = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.productService.deleteProducts(this.selectedProducts).subscribe((data: any) => {
+                this.loadProducts();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+                this.selectedProducts = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.productService.deleteProduct(this.product.id).subscribe((data: any) => {
-            this.loadProducts();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-            this.product = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.productService.deleteProduct(this.product.id).subscribe((data: any) => {
+                this.loadProducts();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+                this.product = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -118,21 +127,25 @@ export class ProductComponent implements OnInit {
 
         if (this.product.productName?.trim()) {
             if (this.product.id) {
-                this.productService.updateProduct(this.product).subscribe((data: any) => {
-                    this.loadProducts();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.productService.updateProduct(this.product).subscribe((data: any) => {
+                        this.loadProducts();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.productService.addProduct(this.product).subscribe((data: any) => {
-                    this.loadProducts();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'ProductCreated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.productService.addProduct(this.product).subscribe((data: any) => {
+                        this.loadProducts();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'ProductCreated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.productDialog = false;
             this.product = {};
@@ -141,5 +154,8 @@ export class ProductComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

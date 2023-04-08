@@ -1,5 +1,5 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -7,13 +7,16 @@ import { AssetService } from '../../service/asset.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LeaveType } from './leave-type';
 import { LeaveTypeService } from '../../service/leave-type.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './leave-type.component.html',
     providers: [MessageService]
 })
-export class LeaveTypeComponent implements OnInit {
-   
+export class LeaveTypeComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
+
     leaveType: LeaveType = {};
 
     leaveTypes: any[] = [];
@@ -53,13 +56,15 @@ export class LeaveTypeComponent implements OnInit {
             { label: 'INACTIVE', value: 'inactive' }
         ];
     }
-    loadLeaveTypes(){
-        this.leaveTypeService.getAllLeaveTypes().subscribe((data: any) => {
-            this.leaveTypes = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadLeaveTypes() {
+        this.subscriptions.add(
+            this.leaveTypeService.getAllLeaveTypes().subscribe((data: any) => {
+                this.leaveTypes = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     openNew() {
@@ -84,26 +89,30 @@ export class LeaveTypeComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteLeaveTypesDialog = false;
-        this.leaveTypeService.deleteLeaveTypes(this.selectedLeaveTypes).subscribe((data: any) => {
-            this.loadLeaveTypes();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Types Deleted', life: 3000 });
-            this.selectedLeaveTypes = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.leaveTypeService.deleteLeaveTypes(this.selectedLeaveTypes).subscribe((data: any) => {
+                this.loadLeaveTypes();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Types Deleted', life: 3000 });
+                this.selectedLeaveTypes = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteLeaveTypeDialog = false;
-        this.leaveTypeService.deleteLeaveType(this.leaveType.id).subscribe((data: any) => {
-            this.loadLeaveTypes();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Deleted', life: 3000 });
-            this.leaveType = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.leaveTypeService.deleteLeaveType(this.leaveType.id).subscribe((data: any) => {
+                this.loadLeaveTypes();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Deleted', life: 3000 });
+                this.leaveType = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -118,21 +127,25 @@ export class LeaveTypeComponent implements OnInit {
 
         if (this.leaveType.type?.trim()) {
             if (this.leaveType.id) {
-                this.leaveTypeService.updateLeaveType(this.leaveType).subscribe((data: any) => {
-                    this.loadLeaveTypes();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.leaveTypeService.updateLeaveType(this.leaveType).subscribe((data: any) => {
+                        this.loadLeaveTypes();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.leaveTypeService.addLeaveType(this.leaveType).subscribe((data: any) => {
-                    this.loadLeaveTypes();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.leaveTypeService.addLeaveType(this.leaveType).subscribe((data: any) => {
+                        this.loadLeaveTypes();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Leave Type Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.leaveTypeDialog = false;
             this.leaveType = {};
@@ -141,5 +154,8 @@ export class LeaveTypeComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

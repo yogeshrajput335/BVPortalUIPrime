@@ -1,17 +1,20 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Reference } from './reference';
 import { ReferenceService } from '../../service/reference.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './reference.component.html',
     providers: [MessageService]
 })
-export class ReferenceComponent implements OnInit {
-    
+export class ReferenceComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
+
     reference: Reference = {};
 
     references: Reference[] = [];
@@ -54,15 +57,17 @@ export class ReferenceComponent implements OnInit {
         ];
 
     }
-    loadReferences(){
-        this.referenceService.getAllReferences().subscribe((data: any) => {
-            this.references = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadReferences() {
+        this.subscriptions.add(
+            this.referenceService.getAllReferences().subscribe((data: any) => {
+                this.references = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
-    
+
     openNew() {
         this.reference = {};
         this.submitted = false;
@@ -85,26 +90,30 @@ export class ReferenceComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteReferencesDialog = false;
-        this.referenceService.deleteReferences(this.selectedReferences).subscribe((data: any) => {
-            this.loadReferences();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'References Deleted', life: 3000 });
-            this.selectedReferences = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.referenceService.deleteReferences(this.selectedReferences).subscribe((data: any) => {
+                this.loadReferences();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'References Deleted', life: 3000 });
+                this.selectedReferences = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteReferenceDialog = false;
-        this.referenceService.deleteReference(this.reference.id).subscribe((data: any) => {
-            this.loadReferences();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Deleted', life: 3000 });
-            this.reference = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.referenceService.deleteReference(this.reference.id).subscribe((data: any) => {
+                this.loadReferences();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Deleted', life: 3000 });
+                this.reference = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -119,21 +128,25 @@ export class ReferenceComponent implements OnInit {
 
         if (this.reference.firstName?.trim()) {
             if (this.reference.id) {
-                this.referenceService.updateReference(this.reference).subscribe((data: any) => {
-                    this.loadReferences();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.referenceService.updateReference(this.reference).subscribe((data: any) => {
+                        this.loadReferences();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.referenceService.addReference(this.reference).subscribe((data: any) => {
-                    this.loadReferences();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.referenceService.addReference(this.reference).subscribe((data: any) => {
+                        this.loadReferences();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Reference Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.referenceDialog = false;
             this.reference = {};
@@ -142,5 +155,8 @@ export class ReferenceComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

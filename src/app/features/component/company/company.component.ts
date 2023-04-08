@@ -1,16 +1,19 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Company } from './company';
 import { CompanyService } from '../../service/company.service ';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './company.component.html',
     providers: [MessageService]
 })
-export class CompanyComponent implements OnInit {
+export class CompanyComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
     
     company: Company = {};
 
@@ -57,15 +60,18 @@ export class CompanyComponent implements OnInit {
         ];
 
     }
-    loadCompanies(){
-        this.companyService.getAllCompanies().subscribe((data: any) => {
-            this.companies = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
-    
+
+        loadCompanies(){
+            this.subscriptions.add(
+            this.companyService.getAllCompanies().subscribe((data: any) => {
+                this.companies = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
+        
     openNew() {
         this.company = {};
         this.submitted = false;
@@ -86,28 +92,32 @@ export class CompanyComponent implements OnInit {
         this.company = { ...company };
     }
 
-    confirmDeleteSelected() {
-        this.deleteCompaniesDialog = false;
-        this.companyService.deleteCompanies(this.selectedCompanies).subscribe((data: any) => {
-            this.loadCompanies();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Companies Deleted', life: 3000 });
-            this.selectedCompanies = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+        confirmDeleteSelected() {
+            this.deleteCompaniesDialog = false;
+            this.subscriptions.add(
+            this.companyService.deleteCompanies(this.selectedCompanies).subscribe((data: any) => {
+                this.loadCompanies();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Companies Deleted', life: 3000 });
+                this.selectedCompanies = [];
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
 
-    confirmDelete() {
-        this.deleteCompanyDialog = false;
-        this.companyService.deleteCompany(this.company.id).subscribe((data: any) => {
-            this.loadCompanies();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Deleted', life: 3000 });
-            this.company = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        confirmDelete() {
+            this.deleteCompanyDialog = false;
+            this.subscriptions.add(
+            this.companyService.deleteCompany(this.company.id).subscribe((data: any) => {
+                this.loadCompanies();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Deleted', life: 3000 });
+                this.company = {};
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
 
 
     }
@@ -117,33 +127,40 @@ export class CompanyComponent implements OnInit {
         this.submitted = false;
     }
 
-    saveCompany() {
-        this.submitted = true;
+        saveCompany() {
+            this.submitted = true;
 
-        if (this.company.companyName?.trim()) {
-            if (this.company.id) {
-                this.companyService.updateCompany(this.company).subscribe((data: any) => {
-                    this.loadCompanies();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
-            } else {
-                this.companyService.addCompany(this.company).subscribe((data: any) => {
-                    this.loadCompanies();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+            if (this.company.companyName?.trim()) {
+                if (this.company.id) {
+                    this.subscriptions.add(
+                    this.companyService.updateCompany(this.company).subscribe((data: any) => {
+                        this.loadCompanies();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                } else {
+                    this.subscriptions.add(
+                    this.companyService.addCompany(this.company).subscribe((data: any) => {
+                        this.loadCompanies();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Created', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                }
+                this.companyDialog = false;
+                this.company = {};
             }
-            this.companyDialog = false;
-            this.company = {};
         }
-    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+      }
 }

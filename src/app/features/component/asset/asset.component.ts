@@ -59,25 +59,25 @@ export class AssetComponent implements OnInit, OnDestroy {
         ];
     }
 
-    loadAssets(){
+    loadAssets() {
         this.subscriptions.add(
             this.assetService.getAllAsset().subscribe((data: any) => {
                 this.assets = data;
             },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            })
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
         );
     }
-    
-    loadAssetTypes(){
+
+    loadAssetTypes() {
         this.subscriptions.add(
             this.assetService.getAllAssetTypes().subscribe((data: any) => {
                 this.assetTypes = data;
             },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            })
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
         );
     }
 
@@ -109,23 +109,23 @@ export class AssetComponent implements OnInit, OnDestroy {
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Assets Deleted', life: 3000 });
                 this.selectedAssets = [];
             },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            })
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
         );
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
         this.subscriptions.add(
-            this.assetService.deleteAsset(this.asset.id??0).subscribe((data: any) => {
+            this.assetService.deleteAsset(this.asset.id ?? 0).subscribe((data: any) => {
                 this.loadAssets();
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Deleted', life: 3000 });
                 this.asset = {};
             },
-            (error: HttpErrorResponse) => {
-                console.log(error.name + ' ' + error.message);
-            })
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
         );
 
 
@@ -146,9 +146,9 @@ export class AssetComponent implements OnInit, OnDestroy {
                         this.loadAssets();
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
                     },
-                    (error: HttpErrorResponse) => {
-                        console.log(error.name + ' ' + error.message);
-                    })
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
                 );
             } else {
                 this.subscriptions.add(
@@ -156,9 +156,9 @@ export class AssetComponent implements OnInit, OnDestroy {
                         this.loadAssets();
                         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
                     },
-                    (error: HttpErrorResponse) => {
-                        console.log(error.name + ' ' + error.message);
-                    })
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
                 );
             }
             this.assetDialog = false;
@@ -171,5 +171,5 @@ export class AssetComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
-      }
+    }
 }

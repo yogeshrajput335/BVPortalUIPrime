@@ -1,5 +1,5 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -9,12 +9,15 @@ import { InvoiceList } from './invoice-list';
 import { AssetTypeService } from '../../service/asset-type.service';
 import { InvoiceService } from '../../service/invoice-list.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './invoice-list.component.html',
     providers: [MessageService]
 })
-export class InvoiceListComponent implements OnInit {
+export class InvoiceListComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
 
     invoice: InvoiceList = {};
 
@@ -37,7 +40,7 @@ export class InvoiceListComponent implements OnInit {
     rowsPerPageOptions = [5, 10, 20];
 
 
-    constructor( private messageService: MessageService,
+    constructor(private messageService: MessageService,
         private invoiceService: InvoiceService, private globalDataService: GlobalDataService, private router: Router) { }
 
     ngOnInit() {
@@ -55,13 +58,15 @@ export class InvoiceListComponent implements OnInit {
             { label: 'SENT', value: 'sent' }
         ];
     }
-    loadInvoiceList(){
-        this.invoiceService.getAllInvoices().subscribe((data: any) => {
-            this.invoices = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadInvoiceList() {
+        this.subscriptions.add(
+            this.invoiceService.getAllInvoices().subscribe((data: any) => {
+                this.invoices = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     openNew() {
@@ -85,26 +90,30 @@ export class InvoiceListComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.invoiceService.deleteInvoices(this.selectedAssetTypes).subscribe((data: any) => {
-            this.loadInvoiceList();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoices Deleted', life: 3000 });
-            this.selectedAssetTypes = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.invoiceService.deleteInvoices(this.selectedAssetTypes).subscribe((data: any) => {
+                this.loadInvoiceList();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoices Deleted', life: 3000 });
+                this.selectedAssetTypes = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.invoiceService.deleteInvoice(this.invoice.id).subscribe((data: any) => {
-            this.loadInvoiceList();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Deleted', life: 3000 });
-            this.invoice = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.invoiceService.deleteInvoice(this.invoice.id).subscribe((data: any) => {
+                this.loadInvoiceList();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Invoice Deleted', life: 3000 });
+                this.invoice = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -117,23 +126,27 @@ export class InvoiceListComponent implements OnInit {
     saveProduct() {
         this.submitted = true;
 
-        if (this.invoice.invoiceNumber && this.invoice.invoiceNumber <=0) {
+        if (this.invoice.invoiceNumber && this.invoice.invoiceNumber <= 0) {
             if (this.invoice.id) {
-                this.invoiceService.updateInvoice(this.invoice).subscribe((data: any) => {
-                    this.loadInvoiceList();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.invoiceService.updateInvoice(this.invoice).subscribe((data: any) => {
+                        this.loadInvoiceList();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.invoiceService.addInvoice(this.invoice).subscribe((data: any) => {
-                    this.loadInvoiceList();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.invoiceService.addInvoice(this.invoice).subscribe((data: any) => {
+                        this.loadInvoiceList();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.assettypeDialog = false;
             this.invoice = {};
@@ -144,5 +157,8 @@ export class InvoiceListComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

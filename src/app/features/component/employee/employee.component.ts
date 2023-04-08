@@ -1,16 +1,19 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Employee } from './employee';
 import { EmployeeService } from '../../service/employee.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './employee.component.html',
     providers: [MessageService]
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
     
     employee: Employee = {};
 
@@ -61,14 +64,17 @@ export class EmployeeComponent implements OnInit {
             { label: 'Contract', value: 'CONTRACT' }
         ];
     }
-    loadEmployees(){
-        this.employeeService.getAllEmployee().subscribe((data: any) => {
-            this.employees = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+
+        loadEmployees(){
+            this.subscriptions.add(
+            this.employeeService.getAllEmployee().subscribe((data: any) => {
+                this.employees = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
     
     openNew() {
         this.employee = {};
@@ -90,64 +96,75 @@ export class EmployeeComponent implements OnInit {
         this.employee = { ...employee };
     }
 
-    confirmDeleteSelected() {
-        this.deleteEmployeesDialog = false;
-        this.employeeService.deleteEmployees(this.selectedEmployees).subscribe((data: any) => {
-            this.loadEmployees();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employees Deleted', life: 3000 });
-            this.selectedEmployees = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
-    }
+        confirmDeleteSelected() {
+            this.deleteEmployeesDialog = false;
+            this.subscriptions.add(
+            this.employeeService.deleteEmployees(this.selectedEmployees).subscribe((data: any) => {
+                this.loadEmployees();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employees Deleted', life: 3000 });
+                this.selectedEmployees = [];
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
+        }
 
-    confirmDelete() {
-        this.deleteEmployeeDialog = false;
-        this.employeeService.deleteEmployee(this.employee.id).subscribe((data: any) => {
-            this.loadEmployees();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Deleted', life: 3000 });
-            this.employee = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        confirmDelete() {
+            this.deleteEmployeeDialog = false;
+            this.subscriptions.add(
+            this.employeeService.deleteEmployee(this.employee.id).subscribe((data: any) => {
+                this.loadEmployees();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Deleted', life: 3000 });
+                this.employee = {};
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+            );
 
 
-    }
+        }
 
     hideDialog() {
         this.employeeDialog = false;
         this.submitted = false;
     }
 
-    saveEmployee() {
-        this.submitted = true;
+        saveEmployee() {
+            this.submitted = true;
 
-        if (this.employee.firstName?.trim()) {
-            if (this.employee.id) {
-                this.employeeService.updateEmployee(this.employee).subscribe((data: any) => {
-                    this.loadEmployees();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
-            } else {
-                this.employeeService.addEmployee(this.employee).subscribe((data: any) => {
-                    this.loadEmployees();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+            if (this.employee.firstName?.trim()) {
+                if (this.employee.id) {
+                    this.subscriptions.add(
+                    this.employeeService.updateEmployee(this.employee).subscribe((data: any) => {
+                        this.loadEmployees();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Updated', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                } else {
+                    this.subscriptions.add(
+                    this.employeeService.addEmployee(this.employee).subscribe((data: any) => {
+                        this.loadEmployees();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Employee Created', life: 3000 });
+                    },
+                    (error: HttpErrorResponse) => {
+                        console.log(error.name + ' ' + error.message);
+                    })
+                    );
+                }
+                this.employeeDialog = false;
+                this.employee = {};
             }
-            this.employeeDialog = false;
-            this.employee = {};
         }
-    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+      }
 }

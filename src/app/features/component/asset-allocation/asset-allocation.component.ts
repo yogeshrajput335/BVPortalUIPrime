@@ -1,17 +1,20 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AssetAllocation } from './asset-allocation';
 import { AssetAllocationService } from '../../service/asset-allocation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './asset-allocation.component.html',
     providers: [MessageService]
 })
-export class AssetAllocationComponent implements OnInit {
-    
+export class AssetAllocationComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
+
     assetAllocation: AssetAllocation = {};
 
     assetAllocations: AssetAllocation[] = [];
@@ -58,23 +61,28 @@ export class AssetAllocationComponent implements OnInit {
         ];
 
     }
-    loadAssetAllocations(){
-        this.assetAllocationService.getAllAssetAllocations().subscribe((data: any) => {
-            this.assetAllocations = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+    loadAssetAllocations() {
+        this.subscriptions.add(
+            this.assetAllocationService.getAllAssetAllocations().subscribe((data: any) => {
+                this.assetAllocations = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
-    
-    loadEmployees(){
-        this.assetAllocationService.getAllEmployees().subscribe((data: any) => {
-            this.employees = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+
+    loadEmployees() {
+        this.subscriptions.add(
+            this.assetAllocationService.getAllEmployees().subscribe((data: any) => {
+                this.employees = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
+
     openNew() {
         this.assetAllocation = {};
         this.submitted = false;
@@ -97,26 +105,30 @@ export class AssetAllocationComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteAssetAllocationsDialog = false;
-        this.assetAllocationService.deleteAssetAllocations(this.selectedAssetAllocations).subscribe((data: any) => {
-            this.loadAssetAllocations();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocations Deleted', life: 3000 });
-            this.selectedAssetAllocations = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetAllocationService.deleteAssetAllocations(this.selectedAssetAllocations).subscribe((data: any) => {
+                this.loadAssetAllocations();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocations Deleted', life: 3000 });
+                this.selectedAssetAllocations = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteAssetAllocationDialog = false;
-        this.assetAllocationService.deleteAssetAllocation(this.assetAllocation.id).subscribe((data: any) => {
-            this.loadAssetAllocations();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Deleted', life: 3000 });
-            this.assetAllocation = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assetAllocationService.deleteAssetAllocation(this.assetAllocation.id).subscribe((data: any) => {
+                this.loadAssetAllocations();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Deleted', life: 3000 });
+                this.assetAllocation = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -131,21 +143,25 @@ export class AssetAllocationComponent implements OnInit {
 
         if (this.assetAllocation.assetName?.trim()) {
             if (this.assetAllocation.id) {
-                this.assetAllocationService.updateAssetAllocation(this.assetAllocation).subscribe((data: any) => {
-                    this.loadAssetAllocations();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assetAllocationService.updateAssetAllocation(this.assetAllocation).subscribe((data: any) => {
+                        this.loadAssetAllocations();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.assetAllocationService.addAssetAllocation(this.assetAllocation).subscribe((data: any) => {
-                    this.loadAssetAllocations();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.assetAllocationService.addAssetAllocation(this.assetAllocation).subscribe((data: any) => {
+                        this.loadAssetAllocations();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Asset Allocation Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.assetAllocationDialog = false;
             this.assetAllocation = {};
@@ -154,5 +170,8 @@ export class AssetAllocationComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

@@ -1,17 +1,20 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Holiday } from './holiday';
 import { HolidayService } from '../../service/holiday.service ';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './holiday.component.html',
     providers: [MessageService]
 })
-export class HolidayComponent implements OnInit {
-    
+export class HolidayComponent implements OnInit, OnDestroy {
+
+    subscriptions = new Subscription();
+
     holiday: Holiday = {};
 
     holidays: Holiday[] = [];
@@ -53,15 +56,18 @@ export class HolidayComponent implements OnInit {
         ];
 
     }
-    loadHolidays(){
-        this.holidayService.getAllHolidays().subscribe((data: any) => {
-            this.holidays = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+
+    loadHolidays() {
+        this.subscriptions.add(
+            this.holidayService.getAllHolidays().subscribe((data: any) => {
+                this.holidays = data;
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
-    
+
     openNew() {
         this.holiday = {};
         this.submitted = false;
@@ -84,26 +90,30 @@ export class HolidayComponent implements OnInit {
 
     confirmDeleteSelected() {
         this.deleteHolidaysDialog = false;
-        this.holidayService.deleteHolidays(this.selectedHolidays).subscribe((data: any) => {
-            this.loadHolidays();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holidays Deleted', life: 3000 });
-            this.selectedHolidays = [];
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.holidayService.deleteHolidays(this.selectedHolidays).subscribe((data: any) => {
+                this.loadHolidays();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holidays Deleted', life: 3000 });
+                this.selectedHolidays = [];
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
     }
 
     confirmDelete() {
         this.deleteHolidayDialog = false;
-        this.holidayService.deleteHoliday(this.holiday.id).subscribe((data: any) => {
-            this.loadHolidays();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Deleted', life: 3000 });
-            this.holiday = {};
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.holidayService.deleteHoliday(this.holiday.id).subscribe((data: any) => {
+                this.loadHolidays();
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Deleted', life: 3000 });
+                this.holiday = {};
+            },
+                (error: HttpErrorResponse) => {
+                    console.log(error.name + ' ' + error.message);
+                })
+        );
 
 
     }
@@ -118,21 +128,25 @@ export class HolidayComponent implements OnInit {
 
         if (this.holiday.holidayName?.trim()) {
             if (this.holiday.id) {
-                this.holidayService.updateHoliday(this.holiday).subscribe((data: any) => {
-                    this.loadHolidays();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Updated', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.holidayService.updateHoliday(this.holiday).subscribe((data: any) => {
+                        this.loadHolidays();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Updated', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             } else {
-                this.holidayService.addHoliday(this.holiday).subscribe((data: any) => {
-                    this.loadHolidays();
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Created', life: 3000 });
-                },
-                (error: HttpErrorResponse) => {
-                    console.log(error.name + ' ' + error.message);
-                });
+                this.subscriptions.add(
+                    this.holidayService.addHoliday(this.holiday).subscribe((data: any) => {
+                        this.loadHolidays();
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Holiday Created', life: 3000 });
+                    },
+                        (error: HttpErrorResponse) => {
+                            console.log(error.name + ' ' + error.message);
+                        })
+                );
             }
             this.holidayDialog = false;
             this.holiday = {};
@@ -141,5 +155,8 @@ export class HolidayComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

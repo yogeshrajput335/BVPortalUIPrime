@@ -1,5 +1,5 @@
 import { GlobalDataService } from './../../../core/services/global-data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/demo/api/product';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -7,13 +7,15 @@ import { AssetService } from '../../service/asset.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AssetType } from './asset-type';
 import { AssetTypeService } from '../../service/asset-type.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './asset-type.component.html',
     providers: [MessageService]
 })
-export class AssetTypeComponent implements OnInit {
+export class AssetTypeComponent implements OnInit , OnDestroy {
 
+    subscriptions = new Subscription();
     // assets: AssetType[] = [];
 
     // asset: AssetType = {};
@@ -69,12 +71,14 @@ export class AssetTypeComponent implements OnInit {
     //     });
     // }
     loadAssetTypes(){
-        this.assettypeService.getAllAssetTypes().subscribe((data: any) => {
-            this.assetTypes = data;
-        },
-        (error: HttpErrorResponse) => {
-            console.log(error.name + ' ' + error.message);
-        });
+        this.subscriptions.add(
+            this.assettypeService.getAllAssetTypes().subscribe((data: any) => {
+                this.assetTypes = data;
+            },
+            (error: HttpErrorResponse) => {
+                console.log(error.name + ' ' + error.message);
+            })
+        );
     }
 
     openNew() {
@@ -157,4 +161,7 @@ export class AssetTypeComponent implements OnInit {
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+      }
 }

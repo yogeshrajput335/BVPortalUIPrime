@@ -20,6 +20,6 @@ export class ServiceService {
       return this.httpClient.delete('Service/DeleteService/' + id);
     }
     deleteServices(services: Service[]) {
-      return this.httpClient.post('Service/DeleteService',services);
+      return this.httpClient.post('Service/DeleteServices',services);
     }
 }

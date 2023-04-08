@@ -20,6 +20,6 @@ export class CompanyService {
       return this.httpClient.delete('Company/DeleteCompany/' + id);
     }
     deleteCompanies(companies: Company[]) {
-      return this.httpClient.post('Company/DeleteCompany',companies);
+      return this.httpClient.post('Company/DeleteCompanies',companies);
     }
 }

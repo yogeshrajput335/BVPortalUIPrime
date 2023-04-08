@@ -20,6 +20,6 @@ export class HolidayService {
       return this.httpClient.delete('HolidayMaster/DeleteHolidayMaster/' + id);
     }
     deleteHolidays(holidays: Holiday[]) {
-      return this.httpClient.post('HolidayMaster/DeleteHolidayMaster',holidays);
+      return this.httpClient.post('HolidayMaster/DeleteHolidayMasters',holidays);
     }
 }
